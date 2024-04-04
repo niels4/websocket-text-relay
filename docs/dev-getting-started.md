@@ -5,3 +5,4 @@ Placeholder for instructions on how to:
     * run tests
     * point your text editor plugin to use your checked out code
     * run the chrome debugger and set breakpoints
+    * understanding the code structure

@@ -3,6 +3,8 @@
 This application connects to your text editor using the Language Server Protocol (LSP) and then starts a websocket
 server that front end clients can connect to and subscribe to file change events. This allows users to see their
 front end changes evaluated immediately as they type, without having to first save the file to disk or reload the browser.
+It's a similar concept to sites like CodePen and JsFiddle, except you can develop locally using your own text editor with all
+of your personalized plugins instead of having to use an in browser code editor.
 
 ## Usage
 
