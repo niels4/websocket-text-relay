@@ -1,5 +1,5 @@
 import { JsonRpcInterface } from "./src/language-server/JsonRpcInterface.js"
-// import { WebsocketInterface } from "./src/websocket-interface/WebsocketInterface.js"
+import { WebsocketInterface } from "./src/websocket-interface/WebsocketInterface.js"
 
 const DEFAULT_WS_PORT = 38378
 
@@ -36,13 +36,13 @@ export const startLanguageServer = (options = {}) => {
   const {inputStream: inputStreamParam, outputStream: outputStreamParam, port: portParam} = options
   const jsonRpc = new JsonRpcInterface(resolveIoStreams({inputStreamParam, outputStreamParam}))
 
-  // const wsInterface = new WebsocketInterface({port: resolvePort(portParam)})
+  const wsInterface = new WebsocketInterface({port: resolvePort(portParam)})
 
-  // wsInterface.emitter.on('message', (message) => {
-  //   if (message.method === "watch-editor-active-files") {
-  //     jsonRpc.sendNotification("wtr/update-active-files", {files: message.files})
-  //   }
-  // })
+  wsInterface.emitter.on('message', (message) => {
+    if (message.method === "watch-editor-active-files") {
+      jsonRpc.sendNotification("wtr/update-active-files", {files: message.files})
+    }
+  })
 
   jsonRpc.onRequest("initialize", (params) => {
     const wsInitMessage = {
@@ -52,7 +52,7 @@ export const startLanguageServer = (options = {}) => {
       lsPid: process.pid
     }
 
-    // wsInterface.sendInitMessage(wsInitMessage)
+    wsInterface.sendInitMessage(wsInitMessage)
 
     return lspInitializeResponse
   })
@@ -70,18 +70,18 @@ export const startLanguageServer = (options = {}) => {
   })
 
   jsonRpc.onNotification('wtr/update-open-files', ({files}) => {
-    // wsInterface.sendOpenFileList(files)
+    wsInterface.sendOpenFileList(files)
   })
 
   jsonRpc.onNotification("textDocument/didOpen", (params) => {
     const file = getNormalizedFileName(params.textDocument.uri)
     const contents = params.textDocument.text
-    // wsInterface.sendText({file, contents})
+    wsInterface.sendText({file, contents})
   })
 
   jsonRpc.onNotification("textDocument/didChange", (params) => {
     const file = getNormalizedFileName(params.textDocument.uri)
     const contents = params.contentChanges[0]?.text
-    // wsInterface.sendText({file, contents})
+    wsInterface.sendText({file, contents})
   })
 }
