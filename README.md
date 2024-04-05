@@ -1,5 +1,9 @@
 # websocket-text-relay (WTR)
 
+## Alpha
+
+Note: This tool is still in alpha state. Some features like the VsCode extension and vite plugin have not been published yet. Documentation is still a work in progress
+
 This application connects to your text editor using the Language Server Protocol (LSP) and then starts a websocket
 server that front end clients can connect to and subscribe to file change events. This allows users to see their
 front end changes evaluated immediately as they type, without having to first save the file to disk or reload the browser.
