@@ -1,0 +1,198 @@
+.base_colors {
+  --color-navy-nightfall: #0d151b;
+  --color-tangerine-sunset: #fb4b37;
+  --color-golden-sunset: #fbcc3b;
+  --color-amber-dawn: #ffd986;
+  --color-azure-afternoon: #629bc2;
+  --color-ivory-daybreak: #f0ebeb;
+  --color-light-sand-dune: #d6d2c2;
+  --color-evening-shadow: #514a45;
+}
+
+.color_palette {
+  --bg2: var(--color-navy-nightfall);
+  --accent-active: var(var(--color-golden-sunset))
+}
+
+.color_theme {
+  --main-background-color: var(--bg2);
+  --header-text-color: var(--color-ivory-daybreak);
+  --summary-value-text-color: hsl(from var(--header-text-color) h s l / 0.9);
+  --offline-color: oklch(from var(--color-golden-sunset) calc(l * .5) calc(c * .25) h);
+  --online-color: oklch(from var(--color-golden-sunset) calc(l * .80) calc(c * .25) h);
+  --active-color: var(--color-golden-sunset);
+  --wedge-online-color: oklch(from var(--color-azure-afternoon) calc(l * .5) calc(c * .5) h);
+  --wedge-active-color: var(--color-azure-afternoon);
+  --timeseries-line-color: var(--color-tangerine-sunset);
+  --timeseries-label-color: #7f8186;
+  --timeseries-value-color: oklch(from var(--timeseries-label-color) calc(l * 1.2) c h);
+
+}
+
+body {
+  background: var(--main-background-color);
+}
+
+#svg_root {
+  fill: none;
+  stroke: none;
+  stroke-width: 0.01;
+  font-family: Montserrat, sans-serif;
+  font-size: 0.1pt;
+}
+
+#grid_group {
+  stroke: #fff;
+  stroke-width: 0.001;
+}
+
+.grid_axis {
+  stroke-width: 0.003;
+  stroke: hsl(76, 90%, 80%);
+}
+
+#header_summary_group {
+  fill: var(--header-text-color);
+  font-weight: 300;
+}
+
+.right_header {
+  text-anchor: end;;
+}
+
+.header_number {
+  font-weight: 100;
+}
+
+#status_ring_group {
+  stroke: var(--offline-color);
+}
+
+#status_ring_group.online {
+  stroke: var(--online-color);
+}
+
+#status_ring_group.active {
+  stroke: var(--active-color);
+}
+
+.single_wedge_group {
+  display: none;
+}
+
+.single_wedge_group.online, .single_wedge_group.active {
+  display: inherit;
+}
+
+.online .wedge_node {
+  fill: var(--wedge-online-color);
+}
+
+.active .wedge_node {
+  fill: var(--wedge-active-color);
+}
+
+.wedge_identifier {
+  fill: var(--header-text-color);
+  font-size: 0.04pt;
+}
+
+.wedge_identifier.small_text {
+  font-size: 0.03pt;
+}
+
+.summary_text_value {
+  fill: var(--summary-value-text-color);
+  font-size: 0.03pt;
+  font-weight: 200;
+}
+
+.summary_watched_circle {
+  fill: var(--wedge-active-color);
+}
+
+.summary_active_circle {
+  fill: var(--active-color);
+}
+
+.timeseries_bg {
+  /* fill: #ffffff1f; */
+  fill: none;
+}
+
+.timeseries_path {
+  stroke: var(--timeseries-line-color);
+  clip-path: url(#inner_circle_clip);
+}
+
+.timeseries_big_label {
+  /* fill: var(--timeseries-label-color); */
+  font-size: 0.04pt;
+  font-weight: 400;
+  text-anchor: end;
+}
+
+.timeseries_small_label {
+  /* fill: var(--timeseries-label-color); */
+  font-size: 0.03pt;
+  font-weight: 400;
+  text-anchor: end;
+}
+
+.timeseries_value {
+  fill: var(--timeseries-value-color);
+  font-size: 0.05pt;
+  font-weight: 300;
+  text-anchor: middle;
+}
+
+.tooltip_text {
+  fill: #fff;
+  font-size: 0.025pt;
+  font-weight: 200;
+  text-anchor: middle;
+}
+
+.tooltip_outline {
+  stroke: #fff;
+  stroke-width: 0.002;
+  fill: #000;
+}
+
+.tooltip_display_group {
+  display: none;
+}
+
+.tooltip_wrapper_group:hover .tooltip_display_group {
+  display: initial;
+}
+
+.server_status_label {
+  fill: var(--timeseries-label-color);
+  font-weight: 300;
+  font-size: 0.06pt;
+  text-anchor: middle;
+}
+
+.server_status_value {
+  fill: var(--timeseries-value-color);
+  font-weight: 100;
+  font-size: 0.06pt;
+  text-anchor: middle;
+}
+
+.server_status_offline {
+  fill: var(--timeseries-line-color);
+  font-weight: 400;
+  font-size: 0.06pt;
+  text-anchor: middle;
+}
+
+.test_circle {
+  fill: #fff;
+}
+
+.test_line {
+  stroke: #fff;
+  stroke-width: 0.005;
+}
