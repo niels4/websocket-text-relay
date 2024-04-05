@@ -1,0 +1,29 @@
+{
+  "root": true,
+  "extends": [
+    "eslint:recommended"
+  ],
+  "rules": {
+    "semi": ["error", "never"],
+    "indent": ["error", 2],
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "no-unused-vars": 1,
+    "no-return-assign": 0,
+    "multiline-ternary": 0,
+    "object-curly-spacing": 0,
+    "object-property-newline": 0,
+    "object-curly-newline": 0,
+    "quotes": 0,
+    "quote-props": 0,
+    "import/no-absolute-path": 0
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2024": true
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  }
+}
