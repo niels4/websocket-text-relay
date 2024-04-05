@@ -8,27 +8,32 @@ of your personalized plugins instead of having to use an in browser code editor.
 
 ## Alpha
 
-Note: This tool is still in alpha state. Some features like the VsCode extension and vite plugin have not been published yet. Documentation is still a work in progress
+Note: This tool is still in alpha state. Some features like the VsCode extension have not been published yet. Documentation is still a work in progress
 
 ## Usage
 
 ### 1. Install the extension for your text editor
 
 WTR currently has plugins for Neovim and VSCode.
-    - [websocket-text-relay.nvim](https://github.com/niels4/websocket-text-relay.nvim)
-    - VSCode extension coming soon!
+ - [websocket-text-relay.nvim](https://github.com/niels4/websocket-text-relay.nvim)
+ - VSCode extension coming soon!
 
 If you wish to create a plugin for a new editor, the process is fairly straight forward if the editor has
 LSP support. See the [developer guide to creating a WTR text editor plugin](./docs/creating-text-editor-plugin.md)
 
-### 2. Connect to the websocket server from the front end application
+### 2. Verify the webserver is running with the status UI
+
+The websocket server hosts its own status UI on the same port as the websocket server. You can view
+the status UI and verify everything is running by first starting up your text editor and then opening your browser to [http://localhost:38378](http://localhost:38378)
+
+### 3. Connect to the websocket server from the front end application
 
 To use this on a professional level project that gives you the option to use modules, typescript, and react, I recommend using vite along with
-the plugin **vite-plugin-websocket-text-relay**. This plugin gives you all the power of vite when developing while also hooking
+the plugin [vite-plugin-websocket-text-relay](https://github.com/niels4/vite-plugin-websocket-text-relay). This plugin gives you all the power of vite when developing while also hooking
 the live text updates into Vite's hot module reload system.
 
 If you want to use this as a learning tool to play around with UI concepts using simple projects involving 1 html, css, and javascript file,
-then check out this **Simple WTR reference project**. This is a great setup for following along with any short and focused web development tutorials.
+then check out this **(Simple WTR reference project coming soon)**. This is a great setup for following along with any short and focused web development tutorials.
 
 And finally, the status UI for this project was also created using live updates from websocket-text-relay.
 In addition to giving you live feedback on the status and activity of the application, it is also meant to serve as a
