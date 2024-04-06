@@ -33,7 +33,7 @@ the plugin [vite-plugin-websocket-text-relay](https://github.com/niels4/vite-plu
 the live text updates into Vite's hot module reload system.
 
 If you want to use this as a learning tool to play around with UI concepts using simple projects involving 1 html, css, and javascript file,
-then check out this **(Simple WTR reference project coming soon)**. This is a great setup for following along with any short and focused web development tutorials.
+then check out this [simple reference project](https://github.com/niels4/wtr-simple-example). This is a great setup for following along with any short and focused web development tutorials.
 
 And finally, the status UI for this project was also created using live updates from websocket-text-relay.
 In addition to giving you live feedback on the status and activity of the application, it is also meant to serve as a
