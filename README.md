@@ -18,9 +18,6 @@ WTR currently has plugins for Neovim and VSCode.
  - [websocket-text-relay.nvim](https://github.com/niels4/websocket-text-relay.nvim)
  - VSCode extension coming soon!
 
-If you wish to create a plugin for a new editor, the process is fairly straight forward if the editor has
-LSP support. See the [developer guide to creating a WTR text editor plugin](./docs/creating-text-editor-plugin.md)
-
 ### 2. Verify the webserver is running with the status UI
 
 The websocket server hosts its own status UI on the same port as the websocket server. You can view
