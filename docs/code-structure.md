@@ -75,3 +75,50 @@ to start the http server will be the new main server, the rest of the instances 
 proceed to connect to the new server in client mode again.
 
 All init messages are resent when a websocket client reconnects.
+
+## Status UI
+
+The HTTP server created in `src/websocket-interface/httpServer.js` is also used to host the static files that make up the status UI.
+
+The root of the static site is the `src/ui` directory.
+
+### index.html
+
+The UI is entirely made up of SVG elements, so the only thing the index.html file has to do is set up the root
+SVG element with some groups to act as containers for the different components to use.
+
+### js/index.js
+
+ - Sets up the websocket-text-relay client with handlers for css and javascript files.
+ - initializes the simple dependency management system that allows the UI to be split into several javascript files.
+ - Hooks up events to handle resizing the SVG element on window resize.
+ - emit data and activity events that the UI components can hook into
+
+Whenever a javascript file is edited, its exports are updated and the main.js file is rerun.
+
+### js/util/DependencyManager.js
+
+This is a very quick and simple dependency management system. The dependency container is just an object in the global scope.
+An exportDeps function is created to make it easy to specify which objects in scope are to be exported.
+
+An onEvent function is also created and exported here, it prevents event leaks by cleaning up any registered event handlers whenever the javascript is reevaluated.
+
+### js/util/drawing.js
+
+This is the base utility class for drawing different shapes in SVG. It contains functions to help with drawing
+wedges and other shapes using polar coordinates.
+
+When dealing with polar coordinates, instead of angles being from 0 to 2 * PI, 
+the angle is scaled from 0 to 1, angles 0 and 1 pointing down the positive direciton of the x axis. 0.25 points straight up, 0.5 straight left and 0.75 straight down.
+
+The center of the UI is at (0, 0) with a minimum height and width of 2. Having a good understanding of the unit circle makes dealing with polar coordinates fairly simple.
+
+### js/components/
+
+The components directory contains the javascript classes that render the different elements on the screen.
+
+Each class handles the state for its component and has a draw function that renders it to the screen.
+
+Any components affected by data updates will also have an update function. When called the component will update the elements it manages with the new data.
+
+Some components also respond to text update activity, these components will have a triggerActivity function as well.
