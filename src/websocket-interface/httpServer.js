@@ -2,6 +2,7 @@ import { createServer } from 'node:http'
 import path from 'node:path'
 import fs from 'node:fs'
 import * as url from 'node:url'
+import { isValidOrigin } from './util.js'
 const parentDir = url.fileURLToPath(new URL('..', import.meta.url))
 
 const uiDirName = "ui"
@@ -28,6 +29,11 @@ const getFileType = (fileUrl) => {
 }
 
 const requestHandler = (req, res) => {
+  if (!isValidOrigin(req)) {
+    res.writeHead(403)
+    res.end("FORBIDDEN!")
+    return
+  }
   const filePath = getFilePath(req.url)
   const fileType = getFileType(filePath)
   const contentType = allowedFileTypes.get(fileType)

@@ -10,3 +10,19 @@ export const debounce = (timeout, func) => {
 // first ID returned is 0 and increases every time function is called
 let currentId = 0
 export const getNextId = () => currentId++
+
+const defaultAllowedHost = "localhost"
+
+export const isValidOrigin = (req) => {
+  const {host, origin} = req.headers
+  let hostname
+
+  if (origin == null || origin.length === 0) {
+    hostname = host.split(":")[0]
+  } else {
+    const url = new URL(origin)
+    hostname = url.hostname
+  }
+
+  return hostname === defaultAllowedHost
+}
