@@ -28,8 +28,8 @@ const getFileType = (fileUrl) => {
   return fileUrl.substring(lastDotIndex + 1)
 }
 
-const requestHandler = (req, res) => {
-  if (!isValidOrigin(req)) {
+const requestHandler = (allowedHosts) => (req, res) => {
+  if (!isValidOrigin(allowedHosts, req)) {
     res.writeHead(403)
     res.end("FORBIDDEN!")
     return
@@ -48,10 +48,10 @@ const requestHandler = (req, res) => {
   fileStream.pipe(res)
 }
 
-export const createHttpServer = (port) => {
+export const createHttpServer = (port, allowedHosts) => {
   return new Promise((resolve, reject) => {
     
-    const server = createServer(requestHandler)
+    const server = createServer(requestHandler(allowedHosts))
 
     server.on("error", (e) => {
       reject(e)

@@ -17,8 +17,6 @@ export class WebsocketInterface {
 
     this._onSocketClose = this._onSocketClose.bind(this)
     this._sendQueuedMessages = this._sendQueuedMessages.bind(this)
-
-    this._startInterface()
   }
 
   sendInitMessage (initMessage) {
@@ -36,9 +34,13 @@ export class WebsocketInterface {
     this._sendMessageToServer(sendTextMessage)
   }
 
-  async _startInterface () {
+  setAllowedHosts (allowedHostsList) {
+    this.allowedHosts = new Set(allowedHostsList)
+  }
+
+  async startInterface () {
     try {
-      await createWebsocketServer(this.port)
+      await createWebsocketServer(this.port, this.allowedHosts)
       this.serverSession = new WtrSession({apiMethods, wsInterfaceEmitter: this.emitter})
       this._sendQueuedMessages()
     } catch (e) {
@@ -52,7 +54,7 @@ export class WebsocketInterface {
     this.wsClient.socket.removeEventListener("close", this._onSocketClose)
     this.wsClient.socket.removeEventListener("open", this._sendQueuedMessages)
     this.wsClient = null
-    this._startInterface()
+    this.startInterface()
   }
 
   _sendQueuedMessages () {

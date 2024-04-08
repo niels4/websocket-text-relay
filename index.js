@@ -34,6 +34,7 @@ const lspInitializeResponse = {
 
 export const startLanguageServer = (options = {}) => {
   const {inputStream: inputStreamParam, outputStream: outputStreamParam, port: portParam} = options
+
   const jsonRpc = new JsonRpcInterface(resolveIoStreams({inputStreamParam, outputStreamParam}))
 
   const wsInterface = new WebsocketInterface({port: resolvePort(portParam)})
@@ -52,6 +53,9 @@ export const startLanguageServer = (options = {}) => {
       lsPid: process.pid
     }
 
+    const initOptions = params.initializationOptions || {}
+    wsInterface.setAllowedHosts(initOptions.allowedHosts)
+    wsInterface.startInterface()
     wsInterface.sendInitMessage(wsInitMessage)
 
     return lspInitializeResponse
