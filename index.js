@@ -55,6 +55,7 @@ export const startLanguageServer = (options = {}) => {
 
     const initOptions = params.initializationOptions || {}
     wsInterface.setAllowedHosts(initOptions.allowedHosts)
+    wsInterface.setAllowNetworkAccess(initOptions.allowNetworkAccess)
     wsInterface.startInterface()
     wsInterface.sendInitMessage(wsInitMessage)
 

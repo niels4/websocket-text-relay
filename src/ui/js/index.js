@@ -3,8 +3,6 @@ import "./util/DependencyManager.js"
 
 const { cleanupEventHandlers, statusDataEmitter } = window.__WTR__
 
-const PORT = 38378
-
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
 const CSS_FILE = "css/main.css"
 const cssEndsWith = FILE_PREFIX + CSS_FILE
@@ -28,7 +26,9 @@ const jsFiles = [
 const svgRoot = document.getElementById('svg_root')
 const cssElement = document.getElementById('main_style')
 
-const ws = new WebsocketClient({port: PORT})
+const {hostname, port, protocol} = window.location
+const wsProtocol = protocol === "http:" ? "ws" : "wss"
+const ws = new WebsocketClient({port: port, host: hostname, protocol: wsProtocol})
 
 const handleCss = (contents) => {
   cssElement.innerText = contents
@@ -94,7 +94,7 @@ const subscribeWatchers = () => {
   ws.sendMessage({method: "watch-log-messages"})
   ws.sendMessage({method: "watch-wtr-status"})
   ws.sendMessage({method: "watch-wtr-activity"})
-  ws.sendMessage({ method: "init", name: "beta-status-ui" })
+  ws.sendMessage({ method: "init", name: "status-ui" })
   ws.sendMessage({ method: "watch-file", endsWith: cssEndsWith })
   jsFiles.forEach((jsFile) => {
     const jsEndsWith = FILE_PREFIX + jsFile

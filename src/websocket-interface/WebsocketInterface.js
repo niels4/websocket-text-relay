@@ -14,6 +14,7 @@ export class WebsocketInterface {
     this.openFileListMessage = null
     this.serverSession = null
     this.wsClient = null
+    this.allowNetworkAccess = false
 
     this._onSocketClose = this._onSocketClose.bind(this)
     this._sendQueuedMessages = this._sendQueuedMessages.bind(this)
@@ -38,9 +39,15 @@ export class WebsocketInterface {
     this.allowedHosts = new Set(allowedHostsList)
   }
 
+  setAllowNetworkAccess (allowNetworkAccessParam) {
+    if (allowNetworkAccessParam != null) {
+      this.allowNetworkAccess = allowNetworkAccessParam
+    }
+  }
+
   async startInterface () {
     try {
-      await createWebsocketServer(this.port, this.allowedHosts)
+      await createWebsocketServer({port: this.port, allowedHosts: this.allowedHosts, allowNetworkAccess: this.allowNetworkAccess })
       this.serverSession = new WtrSession({apiMethods, wsInterfaceEmitter: this.emitter})
       this._sendQueuedMessages()
     } catch (e) {

@@ -48,7 +48,7 @@ const requestHandler = (allowedHosts) => (req, res) => {
   fileStream.pipe(res)
 }
 
-export const createHttpServer = (port, allowedHosts) => {
+export const createHttpServer = ({port, allowedHosts, allowNetworkAccess}) => {
   return new Promise((resolve, reject) => {
     
     const server = createServer(requestHandler(allowedHosts))
@@ -57,7 +57,9 @@ export const createHttpServer = (port, allowedHosts) => {
       reject(e)
     })
 
-    server.listen(port, () => {
+    const listenAddress = allowNetworkAccess ? "0.0.0.0" : "127.0.0.1"
+
+    server.listen(port, listenAddress, () => {
       resolve(server)
     })
   })
