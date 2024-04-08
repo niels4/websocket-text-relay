@@ -32,7 +32,7 @@ local home_dir = vim.fn.resolve(os.getenv("HOME"))
 require('lazy').setup {
 
   { 'niels4/websocket-text-relay.nvim', opts = {
-    command = { "node", "--inspect",  home_dir .. "/dev/src/websocket-text-relay/start.js" }
+    cmd = { "node", "--inspect",  home_dir .. "/dev/src/websocket-text-relay/start.js" }
   }}
 
 }
@@ -44,7 +44,7 @@ you should use the `--inspect-brk` option instead. You will need to open the chr
 to continue the execution before the language server will start up if you choose this option.
 
 ```lua
-    command = { "node", "--inspect-brk",  home_dir .. "/dev/src/websocket-text-relay/start.js" }
+    cmd = { "node", "--inspect-brk",  home_dir .. "/dev/src/websocket-text-relay/start.js" }
 ```
 
 ## Edit Status UI
