@@ -6,17 +6,13 @@ front end changes evaluated immediately as they type, without having to first sa
 It's a similar concept to sites like CodePen and JsFiddle, except you can develop locally using your own text editor with all
 of your personalized plugins instead of having to use an in browser code editor.
 
-## Alpha
-
-Note: This tool is still in alpha state. Some features like the VsCode extension have not been published yet. Documentation is still a work in progress
-
 ## Usage
 
 ### 1. Install the extension for your text editor
 
 WTR currently has plugins for Neovim and VSCode.
  - [websocket-text-relay.nvim](https://github.com/niels4/websocket-text-relay.nvim)
- - VSCode extension coming soon!
+ - [websocket-text-relay-vscode](https://github.com/niels4/websocket-text-relay-vscode)
 
 ### 2. Verify the webserver is running with the status UI
 
