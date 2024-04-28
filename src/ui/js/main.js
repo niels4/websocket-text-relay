@@ -9,7 +9,7 @@ gridGroup.innerHTML = ""
 // drawGrid(gridGroup)
 
 const headerSummaryNode = document.getElementById('header_summary_group')
-const headerSummary = new HeaderSummary({parentNode: headerSummaryNode})
+new HeaderSummary({parentNode: headerSummaryNode})
 
 const statusRingNode = document.getElementById('status_ring_group')
 const statusRing = new StatusRing({innerRingRadius, outerRingRadius, outerArcSize, parentNode: statusRingNode})
@@ -70,7 +70,6 @@ const handleStatusData = (rawData) => {
   window.__WTR__.lastStatusData = rawData
   const data = statusDataTranform(rawData)
   console.log("status data updated", data)
-  headerSummary.update(data)
   statusRing.update(data)
   clientWedges.update(data.clients)
   editorWedges.update(data.editors)
