@@ -1,7 +1,7 @@
 const { exportDeps, drawSvgElement, drawCircle, drawLinearPath, coordsToPathData, drawText, drawToolTip } = window.__WTR__
 
 const drawValueWithTooltip  = ({x, y, label, direction, parentNode}) => {
-  const tooltipWrapperGroup = drawSvgElement("g", undefined, "tooltip_wrapper_group", parentNode)
+  const tooltipWrapperGroup = drawSvgElement({tag: "g", className: "tooltip_wrapper_group", parent: parentNode})
   drawToolTip({x: x, y: y - 0.0032, text: label, direction, parentNode: tooltipWrapperGroup})
   return drawText({x: x, y: y, dominantBaseline: "middle", text: "0", className: "timeseries_value", parentNode: tooltipWrapperGroup})
 }
@@ -67,9 +67,9 @@ class ActivityTimeseriesGraph {
     const minY = -height / 2
     const maxY = minY + height
 
-    const clipPath = drawSvgElement("clipPath", {id: innerCircleClipPathId}, undefined, this.parentNode)
+    const clipPath = drawSvgElement({tag: "clipPath", attributes: {id: innerCircleClipPathId}, parent: this.parentNode})
     drawCircle({cx: 0, cy: 0, r: this.innerRingRadius - 0.005, parentNode: clipPath})
-    drawSvgElement("rect", {"clip-path": `url(#${innerCircleClipPathId})`, x: minX, y: minY, height, width}, "timeseries_bg", this.parentNode)
+    drawSvgElement({tag: "rect", attributes: {"clip-path": `url(#${innerCircleClipPathId})`, x: minX, y: minY, height, width}, className: "timeseries_bg", parent: this.parentNode})
 
     const series = this.dataWindow
     const {startTime, endTime, maxValue} = getSeriesWindowInfo(series)

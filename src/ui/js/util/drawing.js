@@ -3,8 +3,8 @@ const { exportDeps } = window.__WTR__
 const TWO_PI = 2 * Math.PI
 const MAX_ANGLE_DELTA = .99999
 
-const drawSvgElement = (tagName, attributes = {}, className, parentNode) => {
-  const element = document.createElementNS("http://www.w3.org/2000/svg", tagName)
+const drawSvgElement = ({tag, attributes = {}, className, parent}) => {
+  const element = document.createElementNS("http://www.w3.org/2000/svg", tag)
 
   if (className && className.length > 0) {
     if (Array.isArray(className)) {
@@ -20,35 +20,35 @@ const drawSvgElement = (tagName, attributes = {}, className, parentNode) => {
     }
   })
 
-  if (parentNode) {
-    parentNode.append(element)
+  if (parent) {
+    parent.append(element)
   }
 
   return element
 }
 
-const drawText = ({x, y, text, dominantBaseline, textAnchor, className, parentNode}) => {
-  const textElement = drawSvgElement("text", {x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor}, className, parentNode)
+const drawText = ({x, y, text, dominantBaseline, textAnchor, className, parentNode: parent}) => {
+  const textElement = drawSvgElement({tag: "text", attributes: {x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor}, className, parent})
   textElement.innerHTML = text
   return textElement
 }
 
-const drawLine = ({x1, y1, x2, y2, className, parentNode}) => {
-  return drawSvgElement("line", {x1, y1, x2, y2}, className, parentNode)
+const drawLine = ({x1, y1, x2, y2, className, parentNode: parent}) => {
+  return drawSvgElement({tag: "line", attributes: {x1, y1, x2, y2}, className, parent})
 }
 
-const drawCircle = ({cx, cy, r, className, parentNode}) => {
-  return drawSvgElement("circle", {cx, cy, r}, className, parentNode)
+const drawCircle = ({cx, cy, r, className, parentNode: parent}) => {
+  return drawSvgElement({tag: "circle", attributes: {cx, cy, r}, className, parent})
 }
 
 const coordsToPathData = (coords) => "M " + coords.map(coord => coord.join(',')).join(" L ")
 
-const drawLinearPath = ({coords, className, parentNode}) => {
+const drawLinearPath = ({coords, className, parentNode: parent}) => {
   const d = coordsToPathData(coords)
-  return drawSvgElement("path", {d}, className, parentNode)
+  return drawSvgElement({tag: "path", attributes: {d}, className, parent})
 }
 
-const drawPolarLine = ({startAngle, startRadius, endAngle, endRadius, className, parentNode}) => {
+const drawPolarLine = ({startAngle, startRadius, endAngle, endRadius, className, parentNode: parent}) => {
   const startAngleRadians = (startAngle % 1) * TWO_PI
   const endAngleRadians = (endAngle % 1) * TWO_PI
   const x1 = Math.cos(startAngleRadians) * startRadius
@@ -56,15 +56,15 @@ const drawPolarLine = ({startAngle, startRadius, endAngle, endRadius, className,
   const x2 = Math.cos(endAngleRadians) * endRadius
   const y2 = -Math.sin(endAngleRadians) * endRadius
 
-  return drawSvgElement("line", {x1, y1, x2, y2}, className, parentNode)
+  return drawSvgElement({tag: "line", attributes: {x1, y1, x2, y2}, className, parent})
 }
 
-const drawPolarCircle = ({angle, radius, r, className, parentNode}) => {
+const drawPolarCircle = ({angle, radius, r, className, parentNode: parent}) => {
   const angleRadians = (angle % 1) * TWO_PI
   const cx = Math.cos(angleRadians) * radius
   const cy = -Math.sin(angleRadians) * radius
 
-  return drawSvgElement("circle", {cx, cy, r}, className, parentNode)
+  return drawSvgElement({tag: "circle", attributes: {cx, cy, r}, className, parent})
 }
 
 const polarToCartesian = (angle, radius) => {
@@ -74,7 +74,7 @@ const polarToCartesian = (angle, radius) => {
   return [x, y]
 }
 
-const drawWedge = ({startAngle, angleDelta, innerRadius, radiusDelta, className, parentNode}) => {
+const drawWedge = ({startAngle, angleDelta, innerRadius, radiusDelta, className, parentNode: parent}) => {
   if (angleDelta < 0) { angleDelta = 0 }
   if (angleDelta > MAX_ANGLE_DELTA) {angleDelta = MAX_ANGLE_DELTA }
 
@@ -100,28 +100,28 @@ A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 1 ${startX2} ${startY2},
 Z
 `
 
-  return drawSvgElement("path", {d}, className, parentNode)
+  return drawSvgElement({tag: "path", attributes: {d}, className, parent})
 }
 
 const triangleHeight = 0.06
 const verticalPadding = 0.01
 const horizontalPadding = 0.04
 
-const drawToolTip = ({x, y, text, direction = "below", parentNode}) => {
+const drawToolTip = ({x, y, text, direction = "below", parentNode: parent}) => {
   const directionMultiplier = direction === "above" ? -1 : 1
-  const tooltipDisplayGroup = drawSvgElement("g", undefined, "tooltip_display_group", parentNode)
+  const tooltipDisplayGroup = drawSvgElement("g", undefined, "tooltip_display_group", parent)
   const bgPlaceholder = drawSvgElement("g", undefined, undefined, tooltipDisplayGroup)
   const textY = y + (triangleHeight + verticalPadding) * directionMultiplier
   const textElement = drawText({x, y: textY, text, className: "tooltip_text", parentNode: tooltipDisplayGroup})
   const textBbox = textElement.getBBox()
-  const rectAttributes = {
+  const attributes = {
     x: textBbox.x - horizontalPadding,
     y: textBbox.y - verticalPadding,
     width: textBbox.width + horizontalPadding * 2,
     height: textBbox.height + verticalPadding * 2,
     rx: 0.015
   }
-  drawSvgElement("rect", rectAttributes, "tooltip_outline", bgPlaceholder)
+  drawSvgElement({tag: "rect", attributes, className: "tooltip_outline", parent: bgPlaceholder})
 }
 
 exportDeps({drawSvgElement, drawLine, drawCircle, drawLinearPath, drawPolarLine, drawPolarCircle, drawWedge,

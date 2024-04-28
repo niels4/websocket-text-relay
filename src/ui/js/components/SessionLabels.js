@@ -2,7 +2,7 @@ const { exportDeps, polarToCartesian, coordsToPathData, drawLinearPath, drawCirc
 
 // a value with a colored circle and tooltip
 const drawSummaryValue  = ({x, y, label, circleClass, parentNode}) => {
-  const tooltipWrapperGroup = drawSvgElement("g", undefined, "tooltip_wrapper_group", parentNode)
+  const tooltipWrapperGroup = drawSvgElement({tag: "g", className: "tooltip_wrapper_group", parent: parentNode})
   drawCircle({cx: x, cy: y - 0.0032, r: summaryCircleRadius, className: circleClass, parentNode: tooltipWrapperGroup})
   drawToolTip({x: x, y: y - 0.0032, text: label, parentNode: tooltipWrapperGroup})
   return drawText({x: x + summaryCircleRadius * 2, y: y, dominantBaseline: "middle", text: "0", className: "summary_text_value", parentNode: tooltipWrapperGroup})
@@ -10,7 +10,7 @@ const drawSummaryValue  = ({x, y, label, circleClass, parentNode}) => {
 
 // similar to summary value, but with an update function that automatically handles moving the circle on the left as the text size changes
 const drawRightAlignedSummaryValue  = ({x, y, label, circleClass, parentNode}) => {
-  const tooltipWrapperGroup = drawSvgElement("g", undefined, "tooltip_wrapper_group", parentNode)
+  const tooltipWrapperGroup = drawSvgElement({tag: "g", className: "tooltip_wrapper_group", parent: parentNode})
   drawToolTip({x: x, y: y - 0.0032, text: label, parentNode: tooltipWrapperGroup})
   const textElement =  drawText({x: x + summaryCircleRadius * 2, y: y, dominantBaseline: "middle", text: "0", textAnchor: "end", className: "summary_text_value", parentNode: tooltipWrapperGroup})
   const xDiff = textElement.getBBox().width
@@ -67,7 +67,7 @@ class ClientLabel {
     const watchedCountBbox = this.watchedCountElement.getBBox()
 
     const xDiff = summaryValueSpacing + watchedCountBbox.width
-    this.activeCountTranslateWrapper = drawSvgElement("g", {transform: `translate(${xDiff}, 0)`}, undefined, this.parentNode)
+    this.activeCountTranslateWrapper = drawSvgElement({tag: "g", attributes: {transform: `translate(${xDiff}, 0)`}, parent: this.parentNode})
     this.activeCountElement = drawSummaryValue({x: summaryStartX, y: summaryMidY, label: "Active Files", circleClass: "summary_active_circle", parentNode: this.activeCountTranslateWrapper})
   }
 
@@ -129,7 +129,7 @@ class EditorLabel {
 
     this.activeCountSummaryValue = drawRightAlignedSummaryValue({x: summaryStartX, y: summaryMidY, label: "Active Files", circleClass: "summary_active_circle", parentNode: this.parentNode})
     const xDiff = this.activeCountSummaryValue.textElement.getBBox().width + summaryCircleRadius + editorSummaryPadding * 2
-    this.openFilesTransformGroup = drawSvgElement('g', {transform: `translate(${-xDiff})`}, undefined, this.parentNode)
+    this.openFilesTransformGroup = drawSvgElement({tag: 'g', attributes: {transform: `translate(${-xDiff})`}, parent: this.parentNode})
     this.openCountSummaryValue = drawRightAlignedSummaryValue({x: summaryStartX, y: summaryMidY, label: "Open Files", circleClass: "summary_watched_circle", parentNode: this.openFilesTransformGroup})
   }
 

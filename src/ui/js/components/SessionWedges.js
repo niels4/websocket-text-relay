@@ -46,7 +46,7 @@ class SessionWedges {
     const wedgeAngleDelta = (totalAngleDelta / numWedges) - wedgeSpacing
     const innerRadius = this.outerRingRadius - wedgeWidth / 2
     for (let i = 0; i < numWedges; i++) {
-      const group = drawSvgElement("g", undefined, "single_wedge_group", this.parentNode)
+      const group = drawSvgElement({tag: "g", className: "single_wedge_group", parent: this.parentNode})
 
       let startAngle = totalStartAngle + this.direction * (i + 1) * wedgeSpacing + this.direction * i * wedgeAngleDelta
       if (this.direction === -1) {
