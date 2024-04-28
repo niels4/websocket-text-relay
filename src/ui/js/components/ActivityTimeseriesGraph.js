@@ -90,7 +90,6 @@ class ActivityTimeseriesGraph {
     const onTickUpdate = () => {
       scheduleNextTick()
 
-      console.log("data tick", Date.now())
       const series = this.dataWindow
       const prevEndTime = series.at(-1).time
       const newTime = prevEndTime + dataWindowInterval
@@ -138,12 +137,7 @@ class ActivityTimeseriesGraph {
 
   triggerActivity () {
     window.currentActivityCount++
-    console.log("time series graph activity")
   }
 }
 
 exportDeps({ActivityTimeseriesGraph})
-
-/*
- *
- */
