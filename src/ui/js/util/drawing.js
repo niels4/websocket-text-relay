@@ -48,25 +48,6 @@ const drawLinearPath = ({coords, className, parentNode: parent}) => {
   return drawSvgElement({tag: "path", attributes: {d}, className, parent})
 }
 
-const drawPolarLine = ({startAngle, startRadius, endAngle, endRadius, className, parentNode: parent}) => {
-  const startAngleRadians = (startAngle % 1) * TWO_PI
-  const endAngleRadians = (endAngle % 1) * TWO_PI
-  const x1 = Math.cos(startAngleRadians) * startRadius
-  const y1 = -Math.sin(startAngleRadians) * startRadius
-  const x2 = Math.cos(endAngleRadians) * endRadius
-  const y2 = -Math.sin(endAngleRadians) * endRadius
-
-  return drawSvgElement({tag: "line", attributes: {x1, y1, x2, y2}, className, parent})
-}
-
-const drawPolarCircle = ({angle, radius, r, className, parentNode: parent}) => {
-  const angleRadians = (angle % 1) * TWO_PI
-  const cx = Math.cos(angleRadians) * radius
-  const cy = -Math.sin(angleRadians) * radius
-
-  return drawSvgElement({tag: "circle", attributes: {cx, cy, r}, className, parent})
-}
-
 const polarToCartesian = (angle, radius) => {
   const angleRadians = (angle % 1) * TWO_PI
   const x = Math.cos(angleRadians) * radius
@@ -74,23 +55,29 @@ const polarToCartesian = (angle, radius) => {
   return [x, y]
 }
 
+const drawPolarLine = ({startAngle, startRadius, endAngle, endRadius, className, parentNode: parent}) => {
+  const [x1, y1] = polarToCartesian(startAngle, startRadius)
+  const [x2, y2] = polarToCartesian(endAngle, endRadius)
+
+  return drawSvgElement({tag: "line", attributes: {x1, y1, x2, y2}, className, parent})
+}
+
+const drawPolarCircle = ({angle, radius, r, className, parentNode: parent}) => {
+  const [cx, cy] = polarToCartesian(angle, radius)
+  return drawSvgElement({tag: "circle", attributes: {cx, cy, r}, className, parent})
+}
+
 const drawWedge = ({startAngle, angleDelta, innerRadius, radiusDelta, className, parentNode: parent}) => {
   if (angleDelta < 0) { angleDelta = 0 }
   if (angleDelta > MAX_ANGLE_DELTA) {angleDelta = MAX_ANGLE_DELTA }
-
-  const startAngleRadians = (startAngle % 1) * TWO_PI
-  const endAngleRadians = ((startAngle + angleDelta) % 1) * TWO_PI
+  const endAngle = startAngle + angleDelta
   const outerRadius = innerRadius + radiusDelta
   const largeArcFlag = (angleDelta % 1) > .5 ? "1" : "0"
 
-  const startX1 = Math.cos(startAngleRadians) * innerRadius
-  const startY1 = -Math.sin(startAngleRadians) * innerRadius
-  const startX2 = Math.cos(startAngleRadians) * outerRadius
-  const startY2 = -Math.sin(startAngleRadians) * outerRadius
-  const endX1 = Math.cos(endAngleRadians) * innerRadius
-  const endY1 = -Math.sin(endAngleRadians) * innerRadius
-  const endX2 = Math.cos(endAngleRadians) * outerRadius
-  const endY2 = -Math.sin(endAngleRadians) * outerRadius
+  const [startX1, startY1] = polarToCartesian(startAngle, innerRadius)
+  const [startX2, startY2] = polarToCartesian(startAngle, outerRadius)
+  const [endX1, endY1] = polarToCartesian(endAngle, innerRadius)
+  const [endX2, endY2] = polarToCartesian(endAngle, outerRadius)
 
   const d = `
 M ${startX1} ${startY1},
