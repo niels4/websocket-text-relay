@@ -96,7 +96,7 @@ class ActivityTimeseriesGraph {
       const newTime = prevEndTime + dataWindowInterval
       series.shift()
       series.push({time: newTime, value: window.currentActivityCount})
-      currentValueElement.innerHTML = window.currentActivityCount
+      currentValueElement.textContent = window.currentActivityCount
       window.currentActivityCount = 0
 
       const pathCoords = series.map(({time, value}) => {
@@ -110,7 +110,7 @@ class ActivityTimeseriesGraph {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const {startTime, endTime, maxValue} = getSeriesWindowInfo(series)
-          maxValueElement.innerHTML = maxValue
+          maxValueElement.textContent = maxValue
 
           valueScale = createLinearScale(0, maxValue, maxY, minY) // in svg, y increases as it goes down, so we need to flip max and min in the range
           timeScale = createLinearScale(startTime, endTime, minX, maxX)

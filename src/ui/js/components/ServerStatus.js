@@ -21,7 +21,7 @@ class ServerStatus {
       this.valueElement.classList.remove(valueTextClass)
       this.offlineElement.classList.add(offlineTextClass)
     } else {
-      this.valueElement.innerHTML = pid
+      this.valueElement.textContent = pid
       this.valueElement.classList.add(valueTextClass)
       this.offlineElement.classList.remove(offlineTextClass)
     }

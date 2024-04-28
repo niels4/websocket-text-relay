@@ -16,7 +16,7 @@ const drawRightAlignedSummaryValue  = ({x, y, label, circleClass, parentNode}) =
   const xDiff = textElement.getBBox().width
   const labelCircle = drawCircle({cx: x - xDiff, cy: y - 0.0032, r: summaryCircleRadius, className: circleClass, parentNode: tooltipWrapperGroup})
   const update = (value) => {
-    textElement.innerHTML = value
+    textElement.textContent = value
     const xDiff = textElement.getBBox().width
     labelCircle.setAttribute("cx", x - xDiff)
   }
@@ -81,13 +81,13 @@ class ClientLabel {
       const halfIndex = Math.floor(name.length / 2)
       const nameFirstHalf = name.substring(0, halfIndex)
       const nameSecondHalf = name.substring(halfIndex, name.length)
-      this.topNameElement.innerHTML = nameFirstHalf
-      this.nameTextElement.innerHTML = nameSecondHalf
+      this.topNameElement.textContent = nameFirstHalf
+      this.nameTextElement.textContent = nameSecondHalf
       this.nameTextElement.classList.add("small_text")
     } else {
       this.topNameElement.innerHTML = ""
       this.nameTextElement.classList.remove("small_text")
-      this.nameTextElement.innerHTML = name
+      this.nameTextElement.textContent = name
     }
 
     const textBbox = addPadding(this.nameTextElement.getBBox(), 0.00, underlinePadding)
@@ -95,8 +95,8 @@ class ClientLabel {
     const newUnderlinePathData = coordsToPathData(underlineCoords)
     this.underlinePath.setAttribute("d", newUnderlinePathData)
 
-    this.watchedCountElement.innerHTML = client.watchCount
-    this.activeCountElement.innerHTML = client.activeWatchCount
+    this.watchedCountElement.textContent = client.watchCount
+    this.activeCountElement.textContent = client.activeWatchCount
 
     const xDiff = summaryValueSpacing + this.watchedCountElement.getBBox().width
     this.activeCountTranslateWrapper.setAttribute("transform", `translate(${xDiff}, 0)`)
@@ -147,13 +147,13 @@ class EditorLabel {
       const halfIndex = Math.floor(name.length / 2)
       const nameFirstHalf = name.substring(0, halfIndex)
       const nameSecondHalf = name.substring(halfIndex, name.length)
-      this.topNameElement.innerHTML = nameFirstHalf
-      this.nameTextElement.innerHTML = nameSecondHalf
+      this.topNameElement.textContent = nameFirstHalf
+      this.nameTextElement.textContent = nameSecondHalf
       this.nameTextElement.classList.add("small_text")
     } else {
       this.topNameElement.innerHTML = ""
       this.nameTextElement.classList.remove("small_text")
-      this.nameTextElement.innerHTML = name
+      this.nameTextElement.textContent = name
     }
 
     const textBbox = addPadding(this.nameTextElement.getBBox(), 0.00, underlinePadding)

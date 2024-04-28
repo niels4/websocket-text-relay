@@ -29,7 +29,7 @@ const drawSvgElement = ({tag, attributes = {}, className, parent}) => {
 
 const drawText = ({x, y, text, dominantBaseline, textAnchor, className, parentNode: parent}) => {
   const textElement = drawSvgElement({tag: "text", attributes: {x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor}, className, parent})
-  textElement.innerHTML = text
+  textElement.textContent = text
   return textElement
 }
 
