@@ -160,11 +160,12 @@ body {
 }
 
 .tooltip_display_group {
-  display: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
 }
 
 .tooltip_wrapper_group:hover .tooltip_display_group {
-  display: initial;
+  opacity: 1;
 }
 
 .server_status_label {
