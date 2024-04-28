@@ -96,8 +96,8 @@ const horizontalPadding = 0.04
 
 const drawToolTip = ({x, y, text, direction = "below", parentNode: parent}) => {
   const directionMultiplier = direction === "above" ? -1 : 1
-  const tooltipDisplayGroup = drawSvgElement("g", undefined, "tooltip_display_group", parent)
-  const bgPlaceholder = drawSvgElement("g", undefined, undefined, tooltipDisplayGroup)
+  const tooltipDisplayGroup = drawSvgElement({tag: "g", className: "tooltip_display_group", parent})
+  const bgPlaceholder = drawSvgElement({tag: "g", parent: tooltipDisplayGroup})
   const textY = y + (triangleHeight + verticalPadding) * directionMultiplier
   const textElement = drawText({x, y: textY, text, className: "tooltip_text", parentNode: tooltipDisplayGroup})
   const textBbox = textElement.getBBox()
