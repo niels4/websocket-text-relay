@@ -137,6 +137,8 @@ class EditorLabel {
     let {name} = editor
     if (!name || name.length === 0) {
       name = "."
+    } else if (name === "Visual Studio Code") {
+      name = "VSCode"
     }
 
     if (editor.isServer) {
