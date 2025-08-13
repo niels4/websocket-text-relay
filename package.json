@@ -6,9 +6,11 @@
     "websocket-text-relay": "./start.js"
   },
   "scripts": {
-    "lint": "eslint .",
-    "test": "vitest run --coverage",
-    "test-ui": "vitest --ui"
+    "format": "prettier src --write",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "npm run lint && vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "type": "module",
   "main": "index.js",
@@ -34,12 +36,15 @@
   },
   "homepage": "https://github.com/niels4/websocket-text-relay#readme",
   "devDependencies": {
-    "@vitest/coverage-v8": "^1.4.0",
-    "@vitest/ui": "^1.4.0",
-    "eslint": "^8.57.0",
-    "vitest": "^1.4.0"
+    "@eslint/js": "^9.33.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.33.0",
+    "globals": "^16.3.0",
+    "prettier": "3.6.2",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
-    "ws": "^8.16.0"
+    "ws": "^8.18.3"
   }
 }
