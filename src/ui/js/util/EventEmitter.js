@@ -1,9 +1,9 @@
 export class EventEmitter {
-  constructor () {
+  constructor() {
     this.events = new Map()
   }
 
-  on (event, listener) {
+  on(event, listener) {
     let eventSubscribers = this.events.get(event)
     if (!eventSubscribers) {
       eventSubscribers = new Set()
@@ -13,9 +13,11 @@ export class EventEmitter {
     return () => this.removeListener(event, listener)
   }
 
-  removeListener (event, listener) {
+  removeListener(event, listener) {
     const eventSubscribers = this.events.get(event)
-    if (!eventSubscribers) { return }
+    if (!eventSubscribers) {
+      return
+    }
     if (!listener) {
       this.events.delete(event)
       return
@@ -23,15 +25,17 @@ export class EventEmitter {
     eventSubscribers.delete(listener)
   }
 
-  emit (event, ...args) {
+  emit(event, ...args) {
     const eventSubscribers = this.events.get(event)
-    if (!eventSubscribers) { return }
+    if (!eventSubscribers) {
+      return
+    }
     for (const listener of eventSubscribers) {
       listener.apply(this, args)
     }
   }
 
-  once (event, listener) {
+  once(event, listener) {
     const remove = this.on(event, (...args) => {
       remove()
       listener.apply(this, args)

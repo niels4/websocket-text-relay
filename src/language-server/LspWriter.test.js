@@ -1,6 +1,13 @@
-import { Writable } from 'node:stream'
+import { Writable } from "node:stream"
 import { describe, it, expect, beforeAll } from "vitest"
-import { TESTONLY_resetRequestId, createHeader, writeNotification, writeRequest, writeResponse, writeToOutput } from "./LspWriter.js"
+import {
+  TESTONLY_resetRequestId,
+  createHeader,
+  writeNotification,
+  writeRequest,
+  writeResponse,
+  writeToOutput,
+} from "./LspWriter.js"
 
 describe("LspWriter", () => {
   describe("createHeader", () => {
@@ -15,7 +22,7 @@ describe("LspWriter", () => {
     })
 
     describe("With some content", () => {
-      const messageObj = {"a": "1"}
+      const messageObj = { a: "1" }
       const expectedHeader = "Content-Length: 9\r\n\r\n"
 
       it("Should create header with correct length", () => {
@@ -25,7 +32,7 @@ describe("LspWriter", () => {
     })
 
     describe("With multi byte characters", () => {
-      const messageObj = {"a": "🌊"}
+      const messageObj = { a: "🌊" }
       const expectedHeader = "Content-Length: 12\r\n\r\n"
 
       it("Should create header with correct byte length, not string length", () => {
@@ -37,16 +44,16 @@ describe("LspWriter", () => {
 
   describe("writeToOutput", () => {
     describe("simple object", () => {
-      const messageObj = {"a": "1"}
+      const messageObj = { a: "1" }
       const expectedOutput = `Content-Length: 9\r\n\r\n{"a":"1"}`
       let actualOutput = ""
 
       beforeAll(() => {
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
         writeToOutput(outputStream, messageObj)
       })
@@ -59,17 +66,17 @@ describe("LspWriter", () => {
 
   describe("writeResponse", () => {
     describe("successful response", () => {
-      const result = {"a": "1"}
+      const result = { a: "1" }
       const error = null
       const expectedOutput = `Content-Length: 45\r\n\r\n{"jsonrpc":"2.0","id":"0","result":{"a":"1"}}`
       let actualOutput = ""
 
       beforeAll(() => {
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
         writeResponse(outputStream, "0", error, result)
       })
@@ -81,16 +88,16 @@ describe("LspWriter", () => {
 
     describe("error response", () => {
       const result = null
-      const error = {code: 1, message: "test error", data: {t: 5}}
+      const error = { code: 1, message: "test error", data: { t: 5 } }
       const expectedOutput = `Content-Length: 83\r\n\r\n{"jsonrpc":"2.0","id":"0","error":{"code":1,"message":"test error","data":{"t":5}}}`
       let actualOutput = ""
 
       beforeAll(() => {
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
         writeResponse(outputStream, "0", error, result)
       })
@@ -104,16 +111,16 @@ describe("LspWriter", () => {
   describe("writeNotification", () => {
     describe("simple parameters", () => {
       const method = "test/test-method"
-      const parameters = {"a": "1"}
+      const parameters = { a: "1" }
       const expectedOutput = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
       let actualOutput = ""
 
       beforeAll(() => {
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
         writeNotification(outputStream, method, parameters)
       })
@@ -127,17 +134,17 @@ describe("LspWriter", () => {
   describe("writeReqest", () => {
     describe("single request", () => {
       const method = "test/test-method"
-      const parameters = {"a": "1"}
+      const parameters = { a: "1" }
       const expectedOutput = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
       let actualOutput = ""
 
       beforeAll(() => {
         TESTONLY_resetRequestId()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
         writeRequest(outputStream, method, parameters)
       })
@@ -149,9 +156,9 @@ describe("LspWriter", () => {
 
     describe("multiple requests", () => {
       const method = "test/test-method"
-      const params1 = {"a": "1"}
-      const params2 = {"b": "2"}
-      const params3 = {"c": "3"}
+      const params1 = { a: "1" }
+      const params2 = { b: "2" }
+      const params3 = { c: "3" }
       const expectedOutput1 = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
       const expectedOutput2 = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`
       const expectedOutput3 = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`
@@ -161,10 +168,10 @@ describe("LspWriter", () => {
       beforeAll(() => {
         TESTONLY_resetRequestId()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
         writeRequest(outputStream, method, params1)
         writeRequest(outputStream, method, params2)

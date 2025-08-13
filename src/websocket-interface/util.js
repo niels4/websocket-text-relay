@@ -14,7 +14,7 @@ export const getNextId = () => currentId++
 const defaultAllowedHost = "localhost"
 
 export const isValidOrigin = (allowedHosts, req) => {
-  const {host, origin} = req.headers
+  const { host, origin } = req.headers
   let hostname
 
   if (origin == null || origin.length === 0) {

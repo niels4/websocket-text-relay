@@ -1,4 +1,4 @@
-import { EventEmitter } from './EventEmitter.js'
+import { EventEmitter } from "./EventEmitter.js"
 
 const dependencies = {}
 window.__WTR__ = dependencies
@@ -10,10 +10,10 @@ const statusDataEmitter = new EventEmitter()
 const cleanupFuncs = []
 
 const onEvent = (emitter, event, func) => {
-  if (typeof emitter.on === 'function') {
+  if (typeof emitter.on === "function") {
     emitter.on(event, func)
     cleanupFuncs.push(() => emitter.removeListener(event, func))
-  } else if (typeof emitter.addEventListener === 'function') {
+  } else if (typeof emitter.addEventListener === "function") {
     emitter.addEventListener(event, func)
     cleanupFuncs.push(() => emitter.removeEventListener(event, func))
   } else {
@@ -22,10 +22,10 @@ const onEvent = (emitter, event, func) => {
 }
 
 const cleanupEventHandlers = () => {
-  cleanupFuncs.forEach(f => f())
+  cleanupFuncs.forEach((f) => f())
   cleanupFuncs.length = 0
 }
 
-exportDeps({exportDeps, statusDataEmitter, onEvent, cleanupEventHandlers})
+exportDeps({ exportDeps, statusDataEmitter, onEvent, cleanupEventHandlers })
 
 export default dependencies

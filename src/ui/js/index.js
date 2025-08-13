@@ -20,15 +20,15 @@ const jsFiles = [
   "js/components/SessionLabels.js",
   "js/components/ActivityTimeseriesGraph.js",
   "js/components/ServerStatus.js",
-  MAIN_JS_FILE
+  MAIN_JS_FILE,
 ]
 
-const svgRoot = document.getElementById('svg_root')
-const cssElement = document.getElementById('main_style')
+const svgRoot = document.getElementById("svg_root")
+const cssElement = document.getElementById("main_style")
 
-const {hostname, port, protocol} = window.location
+const { hostname, port, protocol } = window.location
 const wsProtocol = protocol === "http:" ? "ws" : "wss"
-const ws = new WebsocketClient({port: port, host: hostname, protocol: wsProtocol})
+const ws = new WebsocketClient({ port: port, host: hostname, protocol: wsProtocol })
 
 const handleCss = (contents) => {
   cssElement.innerText = contents
@@ -45,14 +45,16 @@ const handleJs = (contents) => {
   }
 }
 
-ws.emitter.on('message', (message) => {
+ws.emitter.on("message", (message) => {
   console.log("got emitter message", message)
   if (message.endsWith === cssEndsWith) {
     handleCss(message.contents)
     return
   }
-  if (message.method === "watch-file" && message.endsWith.endsWith('.js')) {
-    if (!initFinished) { return }
+  if (message.method === "watch-file" && message.endsWith.endsWith(".js")) {
+    if (!initFinished) {
+      return
+    }
     cleanupEventHandlers()
     handleJs(message.contents)
     if (message.endsWith === mainJsEndsWith) {
@@ -63,26 +65,29 @@ ws.emitter.on('message', (message) => {
     return
   }
   if (message.method === "watch-wtr-status") {
-    statusDataEmitter.emit('data', message.data)
+    statusDataEmitter.emit("data", message.data)
     return
   }
   if (message.method === "watch-wtr-activity") {
-    statusDataEmitter.emit('activity', message.data)
+    statusDataEmitter.emit("activity", message.data)
     return
   }
 })
 
-ws.emitter.on('socket-open', () => statusDataEmitter.emit('socket-open'))
-ws.emitter.on('socket-close', () => statusDataEmitter.emit('socket-close'))
+ws.emitter.on("socket-open", () => statusDataEmitter.emit("socket-open"))
+ws.emitter.on("socket-close", () => statusDataEmitter.emit("socket-close"))
 
 const initFiles = async () => {
-  await fetch(CSS_FILE).then(r => r.text()).then(handleCss)
+  await fetch(CSS_FILE)
+    .then((r) => r.text())
+    .then(handleCss)
   const jsFetches = jsFiles.map(async (fileName) => {
-    return fetch(fileName).then(r => r.text())
+    return fetch(fileName).then((r) => r.text())
   })
   const jsResults = await Promise.all(jsFetches)
   lastMainContents = jsResults.at(-1)
-  requestAnimationFrame(() => { // make sure css is  applied first
+  requestAnimationFrame(() => {
+    // make sure css is  applied first
     jsResults.forEach((contents) => {
       handleJs(contents)
     })
@@ -91,16 +96,15 @@ const initFiles = async () => {
 }
 
 const subscribeWatchers = () => {
-  ws.sendMessage({method: "watch-log-messages"})
-  ws.sendMessage({method: "watch-wtr-status"})
-  ws.sendMessage({method: "watch-wtr-activity"})
+  ws.sendMessage({ method: "watch-log-messages" })
+  ws.sendMessage({ method: "watch-wtr-status" })
+  ws.sendMessage({ method: "watch-wtr-activity" })
   ws.sendMessage({ method: "init", name: "status-ui" })
   ws.sendMessage({ method: "watch-file", endsWith: cssEndsWith })
   jsFiles.forEach((jsFile) => {
     const jsEndsWith = FILE_PREFIX + jsFile
     ws.sendMessage({ method: "watch-file", endsWith: jsEndsWith })
   })
-
 }
 
 await initFiles()

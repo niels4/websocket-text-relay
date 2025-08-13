@@ -1,25 +1,33 @@
 import { describe, it, expect, beforeAll } from "vitest"
-import { PassThrough, Writable } from 'node:stream'
+import { PassThrough, Writable } from "node:stream"
 import { JsonRpcInterface } from "./JsonRpcInterface.js"
 import { TESTONLY_resetRequestId } from "./LspWriter.js"
-import { invalidRequestErrorCode, invalidRequestErrorMessage, methodNotFoundErrorCode, methodNotFoundErrorMessage, unexpectedNotificationErrorCode,
-  unexpectedNotificationErrorMessage, unexpectedRequestErrorCode, unexpectedRequestErrorMessage } from "./constants.js"
+import {
+  invalidRequestErrorCode,
+  invalidRequestErrorMessage,
+  methodNotFoundErrorCode,
+  methodNotFoundErrorMessage,
+  unexpectedNotificationErrorCode,
+  unexpectedNotificationErrorMessage,
+  unexpectedRequestErrorCode,
+  unexpectedRequestErrorMessage,
+} from "./constants.js"
 
 describe("JsonRpcInterface", () => {
   describe("onNotification", () => {
     describe("when a we receive a notification message that has a handler", () => {
       let inputStream, outputStream, jsonRpc
       const incomingMessage = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedParams = {a: "1"}
+      const expectedParams = { a: "1" }
       let actualParams = null
 
       beforeAll(() => {
         inputStream = new PassThrough()
         outputStream = new PassThrough()
-        jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onNotification("test/test-method", (params) => {
-          actualParams= params
+          actualParams = params
         })
 
         inputStream.write(incomingMessage)
@@ -38,14 +46,15 @@ describe("JsonRpcInterface", () => {
       beforeAll(() => {
         inputStream = new PassThrough()
         outputStream = new PassThrough()
-        jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onNotification("test/test-method", f1)
-
       })
 
       it("should throw an error if we try to register the same method twice (without first removing the handler)", () => {
-        expect(() => jsonRpc.onNotification("test/test-method", f2)).to.toThrowError(/duplicate method handlers/i)
+        expect(() => jsonRpc.onNotification("test/test-method", f2)).to.toThrowError(
+          /duplicate method handlers/i,
+        )
       })
     })
 
@@ -54,13 +63,13 @@ describe("JsonRpcInterface", () => {
       const incomingMessage = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
       let f1Fired = false
       let f2Fired = false
-      let f1 = () => f1Fired = true
-      let f2 = () => f2Fired = true
+      let f1 = () => (f1Fired = true)
+      let f2 = () => (f2Fired = true)
 
       beforeAll(() => {
         inputStream = new PassThrough()
         outputStream = new PassThrough()
-        jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onNotification("test/test-method", f1)
         jsonRpc.removeNotificationHandler("test/test-method")
@@ -78,19 +87,23 @@ describe("JsonRpcInterface", () => {
     describe("when a notification handler throws an error", () => {
       let inputStream, outputStream, jsonRpc
       const incomingMessage = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedError = {code: unexpectedNotificationErrorCode, message: unexpectedNotificationErrorMessage, data: {method: "test/test-method", params: {a: "1"}, error: "Test notification error"}}
+      const expectedError = {
+        code: unexpectedNotificationErrorCode,
+        message: unexpectedNotificationErrorMessage,
+        data: { method: "test/test-method", params: { a: "1" }, error: "Test notification error" },
+      }
       let actualError
 
       beforeAll(() => {
         inputStream = new PassThrough()
         outputStream = new PassThrough()
-        jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onNotification("test/test-method", () => {
           throw new Error("Test notification error")
         })
 
-        jsonRpc.events.on('notification-error', (error) => {
+        jsonRpc.events.on("notification-error", (error) => {
           actualError = error
         })
 
@@ -105,15 +118,19 @@ describe("JsonRpcInterface", () => {
     describe("when we receive a notification without a handler", () => {
       let inputStream, outputStream, jsonRpc
       const incomingMessage = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedError = {code: methodNotFoundErrorCode, message: methodNotFoundErrorMessage, data: {method: "test/test-method"}}
+      const expectedError = {
+        code: methodNotFoundErrorCode,
+        message: methodNotFoundErrorMessage,
+        data: { method: "test/test-method" },
+      }
       let actualError
 
       beforeAll(() => {
         inputStream = new PassThrough()
         outputStream = new PassThrough()
-        jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
-        jsonRpc.events.on('notification-error', (error) => {
+        jsonRpc.events.on("notification-error", (error) => {
           actualError = error
         })
 
@@ -129,7 +146,7 @@ describe("JsonRpcInterface", () => {
   describe("onRequest", () => {
     describe("when a we receive a request message that has a handler", () => {
       const incomingMessage = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedParams = {a: "1"}
+      const expectedParams = { a: "1" }
       let actualParams = null
       const expectedOutput = `Content-Length: 54\r\n\r\n{"jsonrpc":"2.0","id":"0","result":{"someValue":"33"}}`
       let actualOutput = ""
@@ -137,16 +154,16 @@ describe("JsonRpcInterface", () => {
       beforeAll(() => {
         const inputStream = new PassThrough()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onRequest("test/test-method", (params) => {
-          actualParams= params
-          return {someValue: "33"}
+          actualParams = params
+          return { someValue: "33" }
         })
 
         inputStream.write(incomingMessage)
@@ -163,7 +180,7 @@ describe("JsonRpcInterface", () => {
 
     describe("should be able to use an async function as a handler", () => {
       const incomingMessage = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedParams = {a: "1"}
+      const expectedParams = { a: "1" }
       let actualParams = null
       const expectedOutput = `Content-Length: 54\r\n\r\n{"jsonrpc":"2.0","id":"0","result":{"someValue":"34"}}`
       let actualOutput = ""
@@ -171,19 +188,19 @@ describe("JsonRpcInterface", () => {
       beforeAll(() => {
         const inputStream = new PassThrough()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onRequest("test/test-method", async (params) => {
-          actualParams= params
+          actualParams = params
           const someValue = await new Promise((resolve) => {
             setTimeout(() => resolve("34"), 1)
           })
-          return {someValue}
+          return { someValue }
         })
 
         inputStream.write(incomingMessage)
@@ -211,14 +228,15 @@ describe("JsonRpcInterface", () => {
       beforeAll(() => {
         inputStream = new PassThrough()
         outputStream = new PassThrough()
-        jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onRequest("test/test-method", f1)
-
       })
 
       it("should throw an error if we try to register the same method twice (without first removing the handler)", () => {
-        expect(() => jsonRpc.onRequest("test/test-method", f2)).to.toThrowError(/duplicate method handlers/i)
+        expect(() => jsonRpc.onRequest("test/test-method", f2)).to.toThrowError(
+          /duplicate method handlers/i,
+        )
       })
     })
 
@@ -226,13 +244,13 @@ describe("JsonRpcInterface", () => {
       const incomingMessage = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
       let f1Fired = false
       let f2Fired = false
-      let f1 = () => f1Fired = true
-      let f2 = () => f2Fired = true
+      let f1 = () => (f1Fired = true)
+      let f2 = () => (f2Fired = true)
 
       beforeAll(() => {
         const inputStream = new PassThrough()
         const outputStream = new PassThrough()
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onRequest("test/test-method", f1)
         jsonRpc.removeRequestHandler("test/test-method")
@@ -249,7 +267,14 @@ describe("JsonRpcInterface", () => {
 
     describe("when a request handler throws an error", () => {
       const incomingMessage = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedError = {id: "0", error: {code: unexpectedRequestErrorCode, message: unexpectedRequestErrorMessage, data: {method: "test/test-method", params: {a: "1"}, error: "Test request error"}}}
+      const expectedError = {
+        id: "0",
+        error: {
+          code: unexpectedRequestErrorCode,
+          message: unexpectedRequestErrorMessage,
+          data: { method: "test/test-method", params: { a: "1" }, error: "Test request error" },
+        },
+      }
       let actualError
       const expectedOutput = `Content-Length: 179\r\n\r\n{"jsonrpc":"2.0","id":"0","error":{"code":-2,"message":"${unexpectedRequestErrorMessage}","data":{"method":"test/test-method","params":{"a":"1"},"error":"Test request error"}}}`
       let actualOutput = ""
@@ -257,18 +282,18 @@ describe("JsonRpcInterface", () => {
       beforeAll(() => {
         const inputStream = new PassThrough()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
         jsonRpc.onRequest("test/test-method", () => {
           throw new Error("Test request error")
         })
 
-        jsonRpc.events.on('request-error', (error) => {
+        jsonRpc.events.on("request-error", (error) => {
           actualError = error
         })
 
@@ -286,7 +311,14 @@ describe("JsonRpcInterface", () => {
 
     describe("when we receive a request without a handler", () => {
       const incomingMessage = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedError = {id: "0", error: {code: methodNotFoundErrorCode, message: methodNotFoundErrorMessage, data: {method: "test/test-method"}}}
+      const expectedError = {
+        id: "0",
+        error: {
+          code: methodNotFoundErrorCode,
+          message: methodNotFoundErrorMessage,
+          data: { method: "test/test-method" },
+        },
+      }
       let actualError
       const expectedOutput = `Content-Length: 116\r\n\r\n{"jsonrpc":"2.0","id":"0","error":{"code":-32601,"message":"${methodNotFoundErrorMessage}","data":{"method":"test/test-method"}}}`
       let actualOutput = ""
@@ -294,14 +326,14 @@ describe("JsonRpcInterface", () => {
       beforeAll(() => {
         const inputStream = new PassThrough()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
-        jsonRpc.events.on('request-error', (error) => {
+        jsonRpc.events.on("request-error", (error) => {
           actualError = error
         })
 
@@ -320,19 +352,19 @@ describe("JsonRpcInterface", () => {
 
   describe("sendNotification", () => {
     const method = "test/test-method"
-    const parameters = {"a": "1"}
+    const parameters = { a: "1" }
     const expectedOutput = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
     let actualOutput = ""
 
     beforeAll(() => {
       const inputStream = new PassThrough()
       const outputStream = new Writable({
-        write (data, _enc, next) {
+        write(data, _enc, next) {
           actualOutput += data.toString()
           next()
-        }
+        },
       })
-      const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+      const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
       jsonRpc.sendNotification(method, parameters)
     })
 
@@ -344,11 +376,11 @@ describe("JsonRpcInterface", () => {
   describe("sendRequest", () => {
     describe("with result response", () => {
       const method = "test/test-method"
-      const parameters = {"a": "1"}
+      const parameters = { a: "1" }
       const expectedOutput = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
       let actualOutput = ""
       const clientResponse = `Content-Length: 52\r\n\r\n{"jsonrpc":"2.0","id":"0","result":{"testVal":"39"}}`
-      const expectedResult = {testVal: "39"}
+      const expectedResult = { testVal: "39" }
       let actualResult = null
       let inputStream, requestPromise
 
@@ -356,12 +388,12 @@ describe("JsonRpcInterface", () => {
         TESTONLY_resetRequestId()
         inputStream = new PassThrough()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
         requestPromise = jsonRpc.sendRequest(method, parameters)
         requestPromise.then((result) => {
           actualResult = result
@@ -386,11 +418,11 @@ describe("JsonRpcInterface", () => {
 
     describe("with error response", () => {
       const method = "test/test-method"
-      const parameters = {"a": "1"}
+      const parameters = { a: "1" }
       const expectedOutput = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
       let actualOutput = ""
       const clientResponse = `Content-Length: 83\r\n\r\n{"jsonrpc":"2.0","id":"0","error":{"code":1,"message":"test error","data":{"t":5}}}`
-      const expectedError = {"code":1,"message":"test error","data":{"t":5}}
+      const expectedError = { code: 1, message: "test error", data: { t: 5 } }
       let actualResult = null
       let inputStream, requestPromise
 
@@ -398,12 +430,12 @@ describe("JsonRpcInterface", () => {
         TESTONLY_resetRequestId()
         inputStream = new PassThrough()
         const outputStream = new Writable({
-          write (data, _enc, next) {
+          write(data, _enc, next) {
             actualOutput += data.toString()
             next()
-          }
+          },
         })
-        const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+        const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
         requestPromise = jsonRpc.sendRequest(method, parameters)
         requestPromise.catch((result) => {
           actualResult = result
@@ -427,22 +459,22 @@ describe("JsonRpcInterface", () => {
       })
     })
   })
-  
+
   describe("when the lspInputStream encounters a parse-error", () => {
-    const error = {code: 1, message: "test error", data: {t: 5}}
+    const error = { code: 1, message: "test error", data: { t: 5 } }
     const expectedOutput = `Content-Length: 84\r\n\r\n{"jsonrpc":"2.0","id":null,"error":{"code":1,"message":"test error","data":{"t":5}}}`
     let actualOutput = ""
 
     beforeAll(() => {
       const inputStream = new PassThrough()
       const outputStream = new Writable({
-        write (data, _enc, next) {
+        write(data, _enc, next) {
           actualOutput += data.toString()
           next()
-        }
+        },
       })
-      const jsonRpc = new JsonRpcInterface({inputStream, outputStream})
-      jsonRpc.lspInputStream.emit('parse-error', error)
+      const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
+      jsonRpc.lspInputStream.emit("parse-error", error)
     })
 
     it("should write the error to the output stream", () => {
@@ -456,7 +488,7 @@ describe("JsonRpcInterface", () => {
     beforeAll(() => {
       const inputStream = new PassThrough()
       const outputStream = new PassThrough()
-      jsonRpc = new JsonRpcInterface({inputStream, outputStream})
+      jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
     })
 
     it("should not throw an error when there is not a response handler for that id", () => {
@@ -467,22 +499,22 @@ describe("JsonRpcInterface", () => {
   describe("_handleIncomingLspMessage: when there is no id or method", () => {
     let jsonRpc, actualError
     let actualOutput = ""
-    const expectedError = {code: invalidRequestErrorCode, message: invalidRequestErrorMessage}
+    const expectedError = { code: invalidRequestErrorCode, message: invalidRequestErrorMessage }
     const expectedOutput = `Content-Length: 105\r\n\r\n{"jsonrpc":"2.0","id":null,"error":{"code":${invalidRequestErrorCode},"message":"${invalidRequestErrorMessage}"}}`
 
     beforeAll(() => {
       const inputStream = new PassThrough()
       const outputStream = new Writable({
-        write (data, _enc, next) {
+        write(data, _enc, next) {
           actualOutput += data.toString()
           next()
-        }
+        },
       })
-      jsonRpc = new JsonRpcInterface({inputStream, outputStream})
-      jsonRpc.events.on('rpc-error', (error) => {
+      jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
+      jsonRpc.events.on("rpc-error", (error) => {
         actualError = error
       })
-      jsonRpc._handleIncomingLspMessage({id: null, message: null})
+      jsonRpc._handleIncomingLspMessage({ id: null, message: null })
     })
 
     it("should emit an rpc-error event on the events emitter", () => {

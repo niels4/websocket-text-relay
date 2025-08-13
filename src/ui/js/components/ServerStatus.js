@@ -4,19 +4,31 @@ const valueTextClass = "server_status_value"
 const offlineTextClass = "server_status_offline"
 
 class ServerStatus {
-  constructor ({parentNode}) {
+  constructor({ parentNode }) {
     this.parentNode = parentNode
     this.draw()
   }
 
-  draw () {
+  draw() {
     this.parentNode.innerHTML = ""
-    drawText({x: 0, y: .85, text: "WS Server PID", className: "server_status_label", parentNode: this.parentNode})
-    this.valueElement = drawText({x: 0, y: .748, text: "138324", parentNode: this.parentNode})
-    this.offlineElement = drawText({x: 0, y: .748, text: "OFFLINE", className:offlineTextClass, parentNode: this.parentNode})
+    drawText({
+      x: 0,
+      y: 0.85,
+      text: "WS Server PID",
+      className: "server_status_label",
+      parentNode: this.parentNode,
+    })
+    this.valueElement = drawText({ x: 0, y: 0.748, text: "138324", parentNode: this.parentNode })
+    this.offlineElement = drawText({
+      x: 0,
+      y: 0.748,
+      text: "OFFLINE",
+      className: offlineTextClass,
+      parentNode: this.parentNode,
+    })
   }
 
-  update (pid) {
+  update(pid) {
     if (pid == null) {
       this.valueElement.classList.remove(valueTextClass)
       this.offlineElement.classList.add(offlineTextClass)
@@ -28,4 +40,4 @@ class ServerStatus {
   }
 }
 
-exportDeps({ServerStatus})
+exportDeps({ ServerStatus })

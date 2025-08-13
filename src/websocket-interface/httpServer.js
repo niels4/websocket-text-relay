@@ -1,9 +1,9 @@
-import { createServer } from 'node:http'
-import path from 'node:path'
-import fs from 'node:fs'
-import * as url from 'node:url'
-import { isValidOrigin } from './util.js'
-const parentDir = url.fileURLToPath(new URL('..', import.meta.url))
+import { createServer } from "node:http"
+import path from "node:path"
+import fs from "node:fs"
+import * as url from "node:url"
+import { isValidOrigin } from "./util.js"
+const parentDir = url.fileURLToPath(new URL("..", import.meta.url))
 
 const uiDirName = "ui"
 const uiDirPath = path.join(parentDir, uiDirName)
@@ -24,7 +24,9 @@ const getFilePath = (url) => {
 
 const getFileType = (fileUrl) => {
   const lastDotIndex = fileUrl.lastIndexOf(".")
-  if (lastDotIndex < 0 || lastDotIndex >= fileUrl.length) { return "" }
+  if (lastDotIndex < 0 || lastDotIndex >= fileUrl.length) {
+    return ""
+  }
   return fileUrl.substring(lastDotIndex + 1)
 }
 
@@ -41,16 +43,15 @@ const requestHandler = (allowedHosts) => (req, res) => {
     res.writeHead(404)
     res.end("NOT FOUND!")
     return
-  } 
+  }
   res.setHeader("Content-Type", contentType)
   res.writeHead(200)
   const fileStream = fs.createReadStream(filePath)
   fileStream.pipe(res)
 }
 
-export const createHttpServer = ({port, allowedHosts, allowNetworkAccess}) => {
+export const createHttpServer = ({ port, allowedHosts, allowNetworkAccess }) => {
   return new Promise((resolve, reject) => {
-    
     const server = createServer(requestHandler(allowedHosts))
 
     server.on("error", (e) => {

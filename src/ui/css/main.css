@@ -11,22 +11,21 @@
 
 .color_palette {
   --bg2: var(--color-navy-nightfall);
-  --accent-active: var(var(--color-golden-sunset))
+  --accent-active: var(var(--color-golden-sunset));
 }
 
 .color_theme {
   --main-background-color: var(--bg2);
   --header-text-color: var(--color-ivory-daybreak);
   --summary-value-text-color: hsl(from var(--header-text-color) h s l / 0.9);
-  --offline-color: oklch(from var(--color-golden-sunset) calc(l * .5) calc(c * .25) h);
-  --online-color: oklch(from var(--color-golden-sunset) calc(l * .80) calc(c * .25) h);
+  --offline-color: oklch(from var(--color-golden-sunset) calc(l * 0.5) calc(c * 0.25) h);
+  --online-color: oklch(from var(--color-golden-sunset) calc(l * 0.8) calc(c * 0.25) h);
   --active-color: var(--color-golden-sunset);
-  --wedge-online-color: oklch(from var(--color-azure-afternoon) calc(l * .5) calc(c * .5) h);
+  --wedge-online-color: oklch(from var(--color-azure-afternoon) calc(l * 0.5) calc(c * 0.5) h);
   --wedge-active-color: var(--color-azure-afternoon);
   --timeseries-line-color: var(--color-tangerine-sunset);
   --timeseries-label-color: #7f8186;
   --timeseries-value-color: oklch(from var(--timeseries-label-color) calc(l * 1.2) c h);
-
 }
 
 body {
@@ -57,7 +56,7 @@ body {
 }
 
 .right_header {
-  text-anchor: end;;
+  text-anchor: end;
 }
 
 .header_number {
@@ -80,7 +79,8 @@ body {
   display: none;
 }
 
-.single_wedge_group.online, .single_wedge_group.active {
+.single_wedge_group.online,
+.single_wedge_group.active {
   display: inherit;
 }
 

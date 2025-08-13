@@ -1,20 +1,25 @@
-import { PassThrough } from 'node:stream'
+import { PassThrough } from "node:stream"
 import { describe, it, expect, beforeAll } from "vitest"
-import { LspReader } from './LspReader.js'
-import { parseErrorCode, parseHeaderErrorMessage, parseJsonErrorMessage } from './constants.js'
+import { LspReader } from "./LspReader.js"
+import { parseErrorCode, parseHeaderErrorMessage, parseJsonErrorMessage } from "./constants.js"
 
 describe("LspReader", () => {
   describe("simple case", () => {
     describe("when a message comes through the input stream", () => {
       const inputData = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
 
       beforeAll(() => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
         inputStream.write(inputData)
@@ -27,14 +32,19 @@ describe("LspReader", () => {
 
     describe("when content-length header isn't capitalized", () => {
       const inputData = `content-length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
 
       beforeAll(() => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
         inputStream.write(inputData)
@@ -49,7 +59,7 @@ describe("LspReader", () => {
   describe("error cases", () => {
     describe("when Content-Length header is missing", () => {
       const inputData = `Bad-Header: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedError = {code: parseErrorCode, message: parseHeaderErrorMessage}
+      const expectedError = { code: parseErrorCode, message: parseHeaderErrorMessage }
       let actualMessageObj = null
       let actualError
 
@@ -57,10 +67,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
         inputStream.write(inputData)
@@ -78,10 +88,15 @@ describe("LspReader", () => {
     describe("when recovering from a bad header error", () => {
       const inputData = [
         `Bad-Header: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`,
-        `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`
+        `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`,
       ]
-      const expectedError = {code: parseErrorCode, message: parseHeaderErrorMessage}
-      const expectedObject = {"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}
+      const expectedError = { code: parseErrorCode, message: parseHeaderErrorMessage }
+      const expectedObject = {
+        jsonrpc: "2.0",
+        id: "1",
+        method: "test/test-method",
+        params: { b: "2" },
+      }
       let actualMessageObjs = []
       let actualErrors = []
 
@@ -89,10 +104,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObjs.push(message)
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualErrors.push(error)
         })
         inputData.forEach((data) => {
@@ -114,10 +129,15 @@ describe("LspReader", () => {
     describe("when recovering from an invalid JSON error", () => {
       const inputData = [
         `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}>`,
-        `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`
+        `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`,
       ]
-      const expectedError = {code: parseErrorCode, message: parseJsonErrorMessage}
-      const expectedObject = {"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}
+      const expectedError = { code: parseErrorCode, message: parseJsonErrorMessage }
+      const expectedObject = {
+        jsonrpc: "2.0",
+        id: "1",
+        method: "test/test-method",
+        params: { b: "2" },
+      }
       let actualMessageObjs = []
       let actualErrors = []
 
@@ -125,10 +145,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObjs.push(message)
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualErrors.push(error)
         })
         inputData.forEach((data) => {
@@ -149,7 +169,7 @@ describe("LspReader", () => {
 
     describe("when JSON is invalid", () => {
       const inputData = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}>`
-      const expectedError = {code: parseErrorCode, message: parseJsonErrorMessage}
+      const expectedError = { code: parseErrorCode, message: parseJsonErrorMessage }
       let actualMessageObj = null
       let actualError
 
@@ -157,10 +177,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
         inputStream.write(inputData)
@@ -178,8 +198,16 @@ describe("LspReader", () => {
 
   describe("single message buffering cases", () => {
     describe("when the message is split in the middle of the header", () => {
-      const inputData = [`Content-Len`, `gth: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`]
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const inputData = [
+        `Content-Len`,
+        `gth: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`,
+      ]
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
       let actualError = null
 
@@ -187,10 +215,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
 
@@ -209,8 +237,23 @@ describe("LspReader", () => {
     })
 
     describe("when the message is split in the middle of the header many times", () => {
-      const inputData = [`Cont`, `ent-L`, `en`, `gth`, `: 7`, `3\r`, `\n`, `\r\n`, `{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`]
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const inputData = [
+        `Cont`,
+        `ent-L`,
+        `en`,
+        `gth`,
+        `: 7`,
+        `3\r`,
+        `\n`,
+        `\r\n`,
+        `{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`,
+      ]
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
       let actualError = null
 
@@ -218,10 +261,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
 
@@ -240,8 +283,16 @@ describe("LspReader", () => {
     })
 
     describe("when the message is split in the middle of the JSON", () => {
-      const inputData = [`Content-Length: 73\r\n\r\n{"jsonrpc":"2.0",`, `"id":"0","method":"test/test-method","params":{"a":"1"}}`]
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const inputData = [
+        `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0",`,
+        `"id":"0","method":"test/test-method","params":{"a":"1"}}`,
+      ]
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
       let actualError = null
 
@@ -249,10 +300,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
 
@@ -271,8 +322,26 @@ describe("LspReader", () => {
     })
 
     describe("when the message is split in the middle of the header and JSON many times", () => {
-      const inputData = [`Con`, `tent-Len`, `gth: 73\r`, `\n`, `\r\n`, `{`, `"jso`, `nrpc":"2.0"`, `,"id":"0","method":"te`, `st/test-method","params":{"a":`, `"1"}`, `}`]
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const inputData = [
+        `Con`,
+        `tent-Len`,
+        `gth: 73\r`,
+        `\n`,
+        `\r\n`,
+        `{`,
+        `"jso`,
+        `nrpc":"2.0"`,
+        `,"id":"0","method":"te`,
+        `st/test-method","params":{"a":`,
+        `"1"}`,
+        `}`,
+      ]
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
       let actualError = null
 
@@ -280,10 +349,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
 
@@ -305,17 +374,22 @@ describe("LspReader", () => {
   describe("when the buffer needs resizing", () => {
     describe("when a message larger than the buffer size comes through the input stream", () => {
       const inputData = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let lspReader
       let actualMessageObj
       let actualInitialBufferSize
 
       beforeAll(() => {
         const inputStream = new PassThrough()
-        lspReader = new LspReader({initialBufferSize: 10})
+        lspReader = new LspReader({ initialBufferSize: 10 })
         actualInitialBufferSize = lspReader.buffer.length
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
         inputStream.write(inputData)
@@ -339,8 +413,16 @@ describe("LspReader", () => {
     })
 
     describe("when a buffer that already has data needs resizing", () => {
-      const inputData = [`Content-Len`, `gth: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`]
-      const expectedMessageObj = {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}
+      const inputData = [
+        `Content-Len`,
+        `gth: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`,
+      ]
+      const expectedMessageObj = {
+        jsonrpc: "2.0",
+        id: "0",
+        method: "test/test-method",
+        params: { a: "1" },
+      }
       let actualMessageObj
       let lspReader
       let actualInitialBufferSize
@@ -348,13 +430,13 @@ describe("LspReader", () => {
 
       beforeAll(() => {
         const inputStream = new PassThrough()
-        lspReader = new LspReader({initialBufferSize: 70})
+        lspReader = new LspReader({ initialBufferSize: 70 })
         actualInitialBufferSize = lspReader.buffer.length
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObj = message
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
 
@@ -390,13 +472,13 @@ describe("LspReader", () => {
     const inputData = [
       `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`,
       `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`,
-      `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`
+      `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`,
     ]
 
     const expectedMessageObjs = [
-      {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}},
-      {"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}},
-      {"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}
+      { jsonrpc: "2.0", id: "0", method: "test/test-method", params: { a: "1" } },
+      { jsonrpc: "2.0", id: "1", method: "test/test-method", params: { b: "2" } },
+      { jsonrpc: "2.0", id: "2", method: "test/test-method", params: { c: "3" } },
     ]
     let actualMessageObjs = []
     let actualError = null
@@ -405,10 +487,10 @@ describe("LspReader", () => {
       const inputStream = new PassThrough()
       const lspReader = new LspReader()
       inputStream.pipe(lspReader)
-      lspReader.on('data', (message) => {
+      lspReader.on("data", (message) => {
         actualMessageObjs.push(message)
       })
-      lspReader.on('parse-error', (error) => {
+      lspReader.on("parse-error", (error) => {
         actualError = error
       })
 
@@ -430,14 +512,14 @@ describe("LspReader", () => {
     const inputDataMessages = [
       `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`,
       `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}`,
-      `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`
+      `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`,
     ]
     const inputData = inputDataMessages.join("")
 
     const expectedMessageObjs = [
-      {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}},
-      {"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}},
-      {"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}
+      { jsonrpc: "2.0", id: "0", method: "test/test-method", params: { a: "1" } },
+      { jsonrpc: "2.0", id: "1", method: "test/test-method", params: { b: "2" } },
+      { jsonrpc: "2.0", id: "2", method: "test/test-method", params: { c: "3" } },
     ]
     let actualMessageObjs = []
     let actualError = null
@@ -446,10 +528,10 @@ describe("LspReader", () => {
       const inputStream = new PassThrough()
       const lspReader = new LspReader()
       inputStream.pipe(lspReader)
-      lspReader.on('data', (message) => {
+      lspReader.on("data", (message) => {
         actualMessageObjs.push(message)
       })
-      lspReader.on('parse-error', (error) => {
+      lspReader.on("parse-error", (error) => {
         actualError = error
       })
 
@@ -469,13 +551,13 @@ describe("LspReader", () => {
     describe("when the next message has an incomplete header", () => {
       const inputData = [
         `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}}Content-Lengt`,
-        `h: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`
+        `h: 73\r\n\r\n{"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}`,
       ]
 
       const expectedMessageObjs = [
-        {"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}},
-        {"jsonrpc":"2.0","id":"1","method":"test/test-method","params":{"b":"2"}},
-        {"jsonrpc":"2.0","id":"2","method":"test/test-method","params":{"c":"3"}}
+        { jsonrpc: "2.0", id: "0", method: "test/test-method", params: { a: "1" } },
+        { jsonrpc: "2.0", id: "1", method: "test/test-method", params: { b: "2" } },
+        { jsonrpc: "2.0", id: "2", method: "test/test-method", params: { c: "3" } },
       ]
       let actualMessageObjs = []
       let actualError = null
@@ -484,10 +566,10 @@ describe("LspReader", () => {
         const inputStream = new PassThrough()
         const lspReader = new LspReader()
         inputStream.pipe(lspReader)
-        lspReader.on('data', (message) => {
+        lspReader.on("data", (message) => {
           actualMessageObjs.push(message)
         })
-        lspReader.on('parse-error', (error) => {
+        lspReader.on("parse-error", (error) => {
           actualError = error
         })
 

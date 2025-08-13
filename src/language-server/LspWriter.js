@@ -1,4 +1,4 @@
-import { headerKey } from './constants.js'
+import { headerKey } from "./constants.js"
 
 const jsonrpc = "2.0"
 
@@ -17,7 +17,7 @@ export const writeToOutput = (outputStream, messageObj) => {
 }
 
 export const writeResponse = (outputStream, id, error, result) => {
-  const response = {jsonrpc, id}
+  const response = { jsonrpc, id }
   if (error) {
     response.error = error
   } else {
@@ -27,18 +27,18 @@ export const writeResponse = (outputStream, id, error, result) => {
 }
 
 export const writeNotification = (outputStream, method, params) => {
-  const message = {jsonrpc, method, params}
+  const message = { jsonrpc, method, params }
   writeToOutput(outputStream, message)
 }
 
 let requestId = 0
 const nextRequestId = () => String(requestId++)
 // only to be used for testing!
-export const TESTONLY_resetRequestId = () => requestId = 0
+export const TESTONLY_resetRequestId = () => (requestId = 0)
 
 export const writeRequest = (outputStream, method, params) => {
   const id = nextRequestId()
-  const request = {jsonrpc, id, method, params}
+  const request = { jsonrpc, id, method, params }
   writeToOutput(outputStream, request)
   return id
 }
