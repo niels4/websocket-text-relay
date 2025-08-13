@@ -1,3 +1,10 @@
+## 1.1.3 - 2025/08/13
+
+This change consisted entirely of updating dependencies and cleaning up code. There should be no user facing changes with this version.
+
+- Updated dependencies to remove all npm audit warnings
+- Added prettier for code formatting
+
 ## 1.1.0 - 2024/04/07
 
 Increased default security.
