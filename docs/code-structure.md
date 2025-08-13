@@ -21,7 +21,7 @@ This is all abstracted away behind the websocket-interface, which is explained i
 
 ## Core Logic: The lsp and websocket events
 
-LSP: `initailze` / WS: `init`
+LSP: `initialize` / WS: `init`
 
 Whenever a new editor instance or front end client connects to the websocket, a websocket session is created for that client. These
 can be seen as the labeled blue wedges around the ring in the status UI. When the lsp client from the editor sends an
