@@ -34,8 +34,7 @@ export class JsonRpcInterface {
   onNotification(method, handler) {
     if (this.notificationHandlers.has(method)) {
       throw new Error(
-        "Can only register one notification handler at a time. Duplicate method handlers for " +
-          method,
+        "Can only register one notification handler at a time. Duplicate method handlers for " + method,
       )
     }
     this.notificationHandlers.set(method, handler)

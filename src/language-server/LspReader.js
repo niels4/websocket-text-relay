@@ -1,10 +1,5 @@
 import { Transform } from "node:stream"
-import {
-  headerKey,
-  parseErrorCode,
-  parseHeaderErrorMessage,
-  parseJsonErrorMessage,
-} from "./constants.js"
+import { headerKey, parseErrorCode, parseHeaderErrorMessage, parseJsonErrorMessage } from "./constants.js"
 
 const defaultInitialBufferSize = 10000
 

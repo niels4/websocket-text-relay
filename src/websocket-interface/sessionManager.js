@@ -102,9 +102,7 @@ export const removeWatchedFileLinks = (clientSession, endsWith) => {
       fileLinks.delete(linkKey)
       if (fileLinks.size === 0) {
         wtrSession.activeOpenFiles.delete(editorFile)
-        wtrSession.emitter.emit("editor-active-files-update", [
-          ...wtrSession.activeOpenFiles.keys(),
-        ])
+        wtrSession.emitter.emit("editor-active-files-update", [...wtrSession.activeOpenFiles.keys()])
         triggerStatusUpdate()
       }
     }

@@ -4,44 +4,46 @@ import { WebsocketInterface } from "./src/websocket-interface/WebsocketInterface
 const DEFAULT_WS_PORT = 38378
 
 const resolvePort = (portParam) => {
-  if (portParam != null) { return portParam }
-  if (process.env["websocket_text_relay_port"] != null) { return process.env["websocket_text_relay_port"] }
+  if (portParam != null) {
+    return portParam
+  }
+  if (process.env["websocket_text_relay_port"] != null) {
+    return process.env["websocket_text_relay_port"]
+  }
   return DEFAULT_WS_PORT
-}
-
-const resolveIoStreams = ({inputStreamParam, outputStreamParam}) => {
-  const inputStream = inputStreamParam || process.stdin
-  const outputStream = outputStreamParam || process.stdout
-  return {inputStream, outputStream}
 }
 
 const fileProtocolPrefix = "file://"
 
 const getNormalizedFileName = (uri) => {
-  if (uri.startsWith(fileProtocolPrefix)) { return uri.substring(fileProtocolPrefix.length) }
+  if (uri.startsWith(fileProtocolPrefix)) {
+    return uri.substring(fileProtocolPrefix.length)
+  }
   return uri
 }
 
 const lspInitializeResponse = {
   serverInfo: {
     name: "Websocket Text Relay LSP Server",
-    version: "1.0.0"
+    version: "1.0.0",
   },
   capabilities: {
-    textDocumentSync: 1 // full text sync
-  }
+    textDocumentSync: 1, // full text sync
+  },
 }
 
 export const startLanguageServer = (options = {}) => {
-  const {inputStream: inputStreamParam, outputStream: outputStreamParam, port: portParam} = options
+  const { inputStream: inputStreamParam, outputStream: outputStreamParam, port: portParam } = options
+  const outputStream = outputStreamParam || process.stdout
+  const inputStream = inputStreamParam || process.stdin
 
-  const jsonRpc = new JsonRpcInterface(resolveIoStreams({inputStreamParam, outputStreamParam}))
+  const jsonRpc = new JsonRpcInterface({ inputStream, outputStream })
 
-  const wsInterface = new WebsocketInterface({port: resolvePort(portParam)})
+  const wsInterface = new WebsocketInterface({ port: resolvePort(portParam) })
 
-  wsInterface.emitter.on('message', (message) => {
+  wsInterface.emitter.on("message", (message) => {
     if (message.method === "watch-editor-active-files") {
-      jsonRpc.sendNotification("wtr/update-active-files", {files: message.files})
+      jsonRpc.sendNotification("wtr/update-active-files", { files: message.files })
     }
   })
 
@@ -50,7 +52,7 @@ export const startLanguageServer = (options = {}) => {
       method: "init",
       name: params.clientInfo?.name || "Unnamed Editor",
       editorPid: params.processId,
-      lsPid: process.pid
+      lsPid: process.pid,
     }
 
     const initOptions = params.initializationOptions || {}
@@ -74,19 +76,19 @@ export const startLanguageServer = (options = {}) => {
     process.exit(0)
   })
 
-  jsonRpc.onNotification('wtr/update-open-files', ({files}) => {
+  jsonRpc.onNotification("wtr/update-open-files", ({ files }) => {
     wsInterface.sendOpenFileList(files)
   })
 
   jsonRpc.onNotification("textDocument/didOpen", (params) => {
     const file = getNormalizedFileName(params.textDocument.uri)
     const contents = params.textDocument.text
-    wsInterface.sendText({file, contents})
+    wsInterface.sendText({ file, contents })
   })
 
   jsonRpc.onNotification("textDocument/didChange", (params) => {
     const file = getNormalizedFileName(params.textDocument.uri)
     const contents = params.contentChanges[0]?.text
-    wsInterface.sendText({file, contents})
+    wsInterface.sendText({ file, contents })
   })
 }

@@ -234,9 +234,7 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should throw an error if we try to register the same method twice (without first removing the handler)", () => {
-        expect(() => jsonRpc.onRequest("test/test-method", f2)).to.toThrowError(
-          /duplicate method handlers/i,
-        )
+        expect(() => jsonRpc.onRequest("test/test-method", f2)).to.toThrowError(/duplicate method handlers/i)
       })
     })
 

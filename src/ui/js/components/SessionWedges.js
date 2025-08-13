@@ -52,9 +52,7 @@ class SessionWedges {
       })
 
       let startAngle =
-        totalStartAngle +
-        this.direction * (i + 1) * wedgeSpacing +
-        this.direction * i * wedgeAngleDelta
+        totalStartAngle + this.direction * (i + 1) * wedgeSpacing + this.direction * i * wedgeAngleDelta
       if (this.direction === -1) {
         startAngle -= wedgeAngleDelta
       }

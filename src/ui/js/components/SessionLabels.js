@@ -96,10 +96,7 @@ class ClientLabel {
   }
 
   draw() {
-    const textStart = polarToCartesian(
-      this.wedgeCenterAngle,
-      this.wedgeCenterRadius + labelLineDistance,
-    )
+    const textStart = polarToCartesian(this.wedgeCenterAngle, this.wedgeCenterRadius + labelLineDistance)
 
     this.topNameElement = drawText({
       x: textStart[0],
@@ -136,8 +133,7 @@ class ClientLabel {
       parentNode: this.parentNode,
     })
 
-    const summaryMidY =
-      textBbox.y + textBbox.height + underlinePadding + summaryCircleRadius / 2 + 0.02
+    const summaryMidY = textBbox.y + textBbox.height + underlinePadding + summaryCircleRadius / 2 + 0.02
     const summaryStartX = textBbox.x + summaryLeftPadding
     this.watchedCountElement = drawSummaryValue({
       x: summaryStartX,
@@ -209,10 +205,7 @@ class EditorLabel {
   }
 
   draw() {
-    const textStart = polarToCartesian(
-      this.wedgeCenterAngle,
-      this.wedgeCenterRadius + labelLineDistance,
-    )
+    const textStart = polarToCartesian(this.wedgeCenterAngle, this.wedgeCenterRadius + labelLineDistance)
 
     this.topNameElement = drawText({
       x: textStart[0],
@@ -252,8 +245,7 @@ class EditorLabel {
     })
 
     const summaryStartX = textBbox.x + textBbox.width - summaryLeftPadding
-    const summaryMidY =
-      textBbox.y + textBbox.height + underlinePadding * 3 + summaryCircleRadius / 2
+    const summaryMidY = textBbox.y + textBbox.height + underlinePadding * 3 + summaryCircleRadius / 2
 
     this.activeCountSummaryValue = drawRightAlignedSummaryValue({
       x: summaryStartX,

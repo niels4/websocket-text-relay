@@ -1,12 +1,5 @@
-const {
-  exportDeps,
-  drawSvgElement,
-  drawCircle,
-  drawLinearPath,
-  coordsToPathData,
-  drawText,
-  drawToolTip,
-} = window.__WTR__
+const { exportDeps, drawSvgElement, drawCircle, drawLinearPath, coordsToPathData, drawText, drawToolTip } =
+  window.__WTR__
 
 const drawValueWithTooltip = ({ x, y, label, direction, parentNode }) => {
   const tooltipWrapperGroup = drawSvgElement({

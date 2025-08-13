@@ -60,14 +60,7 @@ const polarToCartesian = (angle, radius) => {
   return [x, y]
 }
 
-const drawPolarLine = ({
-  startAngle,
-  startRadius,
-  endAngle,
-  endRadius,
-  className,
-  parentNode: parent,
-}) => {
+const drawPolarLine = ({ startAngle, startRadius, endAngle, endRadius, className, parentNode: parent }) => {
   const [x1, y1] = polarToCartesian(startAngle, startRadius)
   const [x2, y2] = polarToCartesian(endAngle, endRadius)
 
@@ -79,14 +72,7 @@ const drawPolarCircle = ({ angle, radius, r, className, parentNode: parent }) =>
   return drawSvgElement({ tag: "circle", attributes: { cx, cy, r }, className, parent })
 }
 
-const drawWedge = ({
-  startAngle,
-  angleDelta,
-  innerRadius,
-  radiusDelta,
-  className,
-  parentNode: parent,
-}) => {
+const drawWedge = ({ startAngle, angleDelta, innerRadius, radiusDelta, className, parentNode: parent }) => {
   if (angleDelta < 0) {
     angleDelta = 0
   }
