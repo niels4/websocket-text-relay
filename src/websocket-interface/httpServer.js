@@ -1,6 +1,7 @@
 import { createServer } from "node:http"
 import path from "node:path"
-import fs from "node:fs"
+import { createReadStream } from "node:fs"
+import fs from "node:fs/promises"
 import * as url from "node:url"
 import { isValidOrigin } from "./util.js"
 const parentDir = url.fileURLToPath(new URL("..", import.meta.url))
@@ -44,10 +45,18 @@ const requestHandler = (allowedHosts) => (req, res) => {
     res.end("NOT FOUND!")
     return
   }
-  res.setHeader("Content-Type", contentType)
-  res.writeHead(200)
-  const fileStream = fs.createReadStream(filePath)
-  fileStream.pipe(res)
+
+  fs.access(filePath, fs.constants.R_OK)
+    .then(() => {
+      res.setHeader("Content-Type", contentType)
+      res.writeHead(200)
+      const fileStream = createReadStream(filePath)
+      fileStream.pipe(res)
+    })
+    .catch((e) => {
+      res.writeHead(404)
+      res.end("NOT FOUND!")
+    })
 }
 
 export const createHttpServer = ({ port, allowedHosts, allowNetworkAccess }) => {
