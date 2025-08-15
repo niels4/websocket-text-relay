@@ -1,3 +1,7 @@
+## 1.1.4 - 2025/08/14
+
+Fixed a crash that occurred when the status UI requests a file that doesn't exist.
+
 ## 1.1.3 - 2025/08/13
 
 This change consisted entirely of updating dependencies and cleaning up code. There should be no user facing changes with this version.
