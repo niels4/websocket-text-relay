@@ -1,5 +1,5 @@
-import { JsonRpcInterface } from "./src/language-server/JsonRpcInterface.js"
-import { WebsocketInterface } from "./src/websocket-interface/WebsocketInterface.js"
+import { JsonRpcInterface } from "./language-server/JsonRpcInterface.js"
+import { WebsocketInterface } from "./websocket-interface/WebsocketInterface.js"
 
 const DEFAULT_WS_PORT = 38378
 
