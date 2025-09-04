@@ -69,7 +69,7 @@ const drawRightAlignedSummaryValue = ({ x, y, label, circleClass, parentNode }) 
 
 const underlinePadding = 0.01
 const summaryCircleRadius = 0.014
-const summaryLeftPadding = 0.03
+const summaryLeftPadding = 0.05
 const summaryValueSpacing = 0.065
 const editorSummaryPadding = 0.025
 
