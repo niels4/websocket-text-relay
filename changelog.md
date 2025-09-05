@@ -1,3 +1,7 @@
+## 1.1.5 - 2025/09/05
+
+Minor UI spacing fix
+
 ## 1.1.4 - 2025/08/14
 
 Fixed a crash that occurred when the status UI requests a file that doesn't exist.

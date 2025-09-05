@@ -1,6 +1,6 @@
 {
   "name": "websocket-text-relay",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "An LSP server for sending live file updates from your text editor to the front end via websockets.",
   "bin": {
     "websocket-text-relay": "./start.js"
