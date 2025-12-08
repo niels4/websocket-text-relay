@@ -53,7 +53,7 @@ const requestHandler = (allowedHosts) => (req, res) => {
       const fileStream = createReadStream(filePath)
       fileStream.pipe(res)
     })
-    .catch((e) => {
+    .catch(() => {
       res.writeHead(404)
       res.end("NOT FOUND!")
     })
