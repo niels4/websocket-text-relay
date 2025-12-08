@@ -49,6 +49,10 @@ const subscribeWatchers = () => {
   ws.sendMessage({ method: "watch-wtr-activity" })
   ws.sendMessage({ method: "init", name: "WTR Status" })
   ws.sendMessage({ method: "watch-file", endsWith: cssEndsWith })
+  jsFiles.forEach((jsFile) => {
+    const jsEndsWith = FILE_PREFIX + jsFile
+    ws.sendMessage({ method: "watch-file", endsWith: jsEndsWith })
+  })
 }
 
 if (ws.socketOpen) {
@@ -60,8 +64,14 @@ ws.emitter.on("socket-open", () => {
 
 ws.emitter.on("message", (message) => {
   console.log("got emitter message", message)
-  if (message.endsWith === cssEndsWith) {
+  if (message.method === "watch-file" && message.endsWith === cssEndsWith) {
     handleCss(message.contents)
+    return
+  }
+
+  if (message.method === "watch-file" && message.endsWith.endsWith(".js")) {
+    // cleanupEventHandlers()
+    handleJs(message.contents)
     return
   }
 
