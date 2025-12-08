@@ -9,13 +9,9 @@
   --color-evening-shadow: #514a45;
 }
 
-.color_palette {
-  --bg2: var(--color-navy-nightfall);
-  --accent-active: var(var(--color-golden-sunset));
-}
-
 .color_theme {
-  --main-background-color: var(--bg2);
+  --accent-active: var(var(--color-golden-sunset));
+  --main-background-color: var(--color-navy-nightfall);
   --header-text-color: var(--color-ivory-daybreak);
   --summary-value-text-color: hsl(from var(--header-text-color) h s l / 0.9);
   --offline-color: oklch(from var(--color-golden-sunset) calc(l * 0.5) calc(c * 0.25) h);
@@ -116,7 +112,6 @@ body {
 }
 
 .timeseries_bg {
-  /* fill: #ffffff1f; */
   fill: none;
 }
 
@@ -126,14 +121,12 @@ body {
 }
 
 .timeseries_big_label {
-  /* fill: var(--timeseries-label-color); */
   font-size: 0.04pt;
   font-weight: 400;
   text-anchor: end;
 }
 
 .timeseries_small_label {
-  /* fill: var(--timeseries-label-color); */
   font-size: 0.03pt;
   font-weight: 400;
   text-anchor: end;
