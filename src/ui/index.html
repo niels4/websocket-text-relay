@@ -11,13 +11,17 @@
     <script type="module" src="js/setup.js" defer></script>
 
     <style>
-      body {
-        margin: 0;
+      html {
+        height: 100dvh;
         overscroll-behavior: none;
-        display: grid;
-        align-items: center;
-        justify-content: center;
-        padding-top: 2px;
+      }
+
+      #svg_root {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100dvh;
+        width: 100dvw;
       }
     </style>
   </head>
