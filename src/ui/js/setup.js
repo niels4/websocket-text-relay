@@ -1,8 +1,15 @@
-// const FILE_PREFIX = "websocket-text-relay/src/ui/"
+import { WebsocketClient } from "./util/WebsocketClient.js"
+
+const FILE_PREFIX = "websocket-text-relay/src/ui/"
+const WS_PORT = 38378
+const { hostname, protocol } = window.location
+const wsProtocol = protocol === "http:" ? "ws" : "wss"
 const CSS_FILE = "css/main.css"
-// const cssEndsWith = FILE_PREFIX + CSS_FILE
+const cssEndsWith = FILE_PREFIX + CSS_FILE
 
 const jsFiles = ["js/components/statusRing.js"]
+
+const ws = new WebsocketClient({ port: WS_PORT, host: hostname, protocol: wsProtocol })
 
 const cssElement = document.getElementById("main_style")
 
@@ -34,5 +41,36 @@ const initFiles = async () => {
     })
   })
 }
-
 await initFiles()
+
+const subscribeWatchers = () => {
+  ws.sendMessage({ method: "watch-log-messages" })
+  ws.sendMessage({ method: "watch-wtr-status" })
+  ws.sendMessage({ method: "watch-wtr-activity" })
+  ws.sendMessage({ method: "init", name: "WTR Status" })
+  ws.sendMessage({ method: "watch-file", endsWith: cssEndsWith })
+}
+
+if (ws.socketOpen) {
+  subscribeWatchers()
+}
+ws.emitter.on("socket-open", () => {
+  subscribeWatchers()
+})
+
+ws.emitter.on("message", (message) => {
+  console.log("got emitter message", message)
+  if (message.endsWith === cssEndsWith) {
+    handleCss(message.contents)
+    return
+  }
+
+  if (message.method === "watch-wtr-status") {
+    console.log("watch status message", message.data)
+    return
+  }
+  if (message.method === "watch-wtr-activity") {
+    console.log("watch activity message", message.data)
+    return
+  }
+})
