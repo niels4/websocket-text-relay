@@ -29,6 +29,17 @@ const drawSvgElement = ({ tag, attributes = {}, className, parent }) => {
   return element
 }
 
+const drawText = ({ x, y, text, dominantBaseline, textAnchor, className, parentNode: parent }) => {
+  const textElement = drawSvgElement({
+    tag: "text",
+    attributes: { x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor },
+    className,
+    parent,
+  })
+  textElement.textContent = text
+  return textElement
+}
+
 const polarToCartesian = (angle, radius) => {
   const angleRadians = (angle % 1) * TWO_PI
   const x = Math.cos(angleRadians) * radius
@@ -63,4 +74,4 @@ Z
   return drawSvgElement({ tag: "path", attributes: { d }, className, parent })
 }
 
-exportDeps({ drawSvgElement, polarToCartesian, drawWedge })
+exportDeps({ drawSvgElement, drawText, polarToCartesian, drawWedge })
