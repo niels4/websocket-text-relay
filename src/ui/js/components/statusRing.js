@@ -22,7 +22,8 @@ drawSvgElement({
 onEvent(wtrStatusEmitter, "data", (data) => {
   let nextClass
   if (data.isOnline) {
-    nextClass = "online"
+    const hasActiveClient = data.sessions.some((session) => Object.keys(session.openFileLinks).length > 0)
+    nextClass = hasActiveClient ? "active" : "online"
   } else {
     nextClass = "offline"
   }
