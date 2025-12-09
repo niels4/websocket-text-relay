@@ -67,21 +67,36 @@ ws.emitter.on("socket-open", () => {
   subscribeWatchers()
 })
 
+let evalInProgress = false
+let bufferedMessage = null
+const handleJsMessage = async (message) => {
+  if (evalInProgress) {
+    bufferedMessage = message
+    return
+  }
+  evalInProgress = true
+  clearEvalOnChangeFiles()
+  handleJs(message.contents)
+  const jsResults = await fetchAllFiles(getEvalOnChangeFiles())
+  jsResults.forEach((contents) => {
+    handleJs(contents)
+  })
+  evalInProgress = false
+  if (bufferedMessage) {
+    const outstandingMessage = bufferedMessage
+    bufferedMessage = null
+    handleJsMessage(outstandingMessage)
+  }
+  return
+}
 ws.emitter.on("message", async (message) => {
-  console.log("got emitter message", message)
   if (message.method === "watch-file" && message.endsWith === cssEndsWith) {
     handleCss(message.contents)
     return
   }
 
   if (message.method === "watch-file" && message.endsWith.endsWith(".js")) {
-    clearEvalOnChangeFiles()
-    handleJs(message.contents)
-    const jsResults = await fetchAllFiles(getEvalOnChangeFiles())
-    jsResults.forEach((contents) => {
-      handleJs(contents)
-    })
-    return
+    await handleJsMessage(message)
   }
 
   if (message.method === "watch-wtr-status") {
