@@ -1,9 +1,11 @@
 import { exportDeps } from "../setup/dependencyManager.js" // make sure the global __WTR__ object is initilized with the exportDeps function
 import { EventEmitter } from "../setup/EventEmitter.js"
 
+/** @type {WtrStatus} */
 const currentStatus = {
   isOnline: false,
-  sessions: [],
+  editors: [],
+  clients: [],
 }
 
 const wtrStatusEmitter = new EventEmitter()
@@ -29,9 +31,53 @@ export const setIsOnline = (isOnline) => {
   wtrStatusEmitter.emit("data", currentStatus)
 }
 
+/**
+ * @param {SessionStatus[]} sessions
+ * @returns {void}
+ */
 export const setSessions = (sessions) => {
-  currentStatus.sessions = sessions
+  const { editors, clients } = sessionDataTranform(sessions)
+  currentStatus.editors = editors
+  currentStatus.clients = clients
   wtrStatusEmitter.emit("data", currentStatus)
+}
+
+/**
+ * @param {SessionStatus[]} sessions
+ * @returns {editors: EditorStatus[], clients: ClientStatus[]}
+ */
+const sessionDataTranform = (sessions) => {
+  const editors = []
+  const clients = []
+  const allSessions = new Map()
+
+  sessions.forEach((session) => {
+    allSessions.set(session.id, session)
+    session.activeWatchCount = 0
+    session.activeOpenCount = 0
+    const isEditor = session.editorPid != null || session.lsPid != null
+    if (isEditor) {
+      editors.push(session)
+    } else {
+      clients.push(session)
+    }
+  })
+
+  for (const session of allSessions.values()) {
+    const openFileLinks = Object.values(session.openFileLinks)
+    session.activeOpenCount = openFileLinks.length
+    openFileLinks.forEach((links) => {
+      links.forEach(({ clientId }) => {
+        const clientSession = allSessions.get(clientId)
+        if (!clientSession) {
+          return
+        }
+        clientSession.activeWatchCount++
+      })
+    })
+  }
+
+  return { editors, clients }
 }
 
 exportDeps({ wtrStatusEmitter })

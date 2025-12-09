@@ -34,10 +34,10 @@ drawWedge({
   parentNode: wrapper,
 })
 
-onEvent(wtrStatusEmitter, "data", (data) => {
+onEvent(wtrStatusEmitter, "data", (/** @type {WtrStatus} */ data) => {
   let nextClass
   if (data.isOnline) {
-    const hasActiveClient = data.sessions.some((session) => Object.keys(session.openFileLinks).length > 0)
+    const hasActiveClient = data.clients.some((client) => client.activeWatchCount > 0)
     nextClass = hasActiveClient ? "active" : "online"
   } else {
     nextClass = "offline"

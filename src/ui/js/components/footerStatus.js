@@ -24,8 +24,8 @@ const offlineElement = drawText({
   parentNode: parentGroup,
 })
 
-onEvent(wtrStatusEmitter, "data", (data) => {
-  const server = data.sessions.find((session) => session.isServer)
+onEvent(wtrStatusEmitter, "data", (/** @type {WtrStatus} */ data) => {
+  const server = data.editors.find((editor) => editor.isServer)
   if (!data.isOnline || server == null) {
     pidElement.classList.remove(valueTextClass)
     offlineElement.classList.add(offlineTextClass)
