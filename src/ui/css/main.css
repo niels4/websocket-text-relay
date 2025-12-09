@@ -36,17 +36,7 @@ body {
   font-size: 0.1pt;
 }
 
-#grid_group {
-  stroke: #fff;
-  stroke-width: 0.001;
-}
-
-.grid_axis {
-  stroke-width: 0.003;
-  stroke: hsl(76, 90%, 80%);
-}
-
-#headers_group {
+.header {
   fill: var(--header-text-color);
   font-weight: 300;
   font-size: 0.1pt;
