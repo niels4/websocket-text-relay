@@ -17,7 +17,15 @@ wtrStatusEmitter.on = function (event, handler) {
 wtrStatusEmitter.addEventListener = wtrStatusEmitter.on
 
 export const setIsOnline = (isOnline) => {
+  if (isOnline === currentStatus.isOnline) {
+    return
+  }
   currentStatus.isOnline = isOnline
+
+  if (!isOnline) {
+    currentStatus.sessions = currentStatus.sessions.filter((s) => !s.isServer)
+  }
+
   wtrStatusEmitter.emit("data", currentStatus)
 }
 
