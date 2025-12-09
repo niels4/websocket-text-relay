@@ -18,7 +18,7 @@ export class EventEmitter {
     if (!eventSubscribers) {
       return
     }
-    if (!listener) {
+    if (typeof listener !== "function") {
       this.events.delete(event)
       return
     }

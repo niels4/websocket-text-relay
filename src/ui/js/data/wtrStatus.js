@@ -1,6 +1,5 @@
-import "../util/dependencyManager.js" // make sure the global __WTR__ object is initilized with the exportDeps function
-import { EventEmitter } from "../util/EventEmitter.js"
-const { exportDeps } = window.__WTR__
+import { exportDeps } from "../setup/dependencyManager.js" // make sure the global __WTR__ object is initilized with the exportDeps function
+import { EventEmitter } from "../setup/EventEmitter.js"
 
 const currentStatus = {
   isOnline: false,
@@ -8,10 +7,10 @@ const currentStatus = {
 }
 
 const wtrStatusEmitter = new EventEmitter()
-wtrStatusEmitter.on = function (name, handler) {
-  EventEmitter.prototype.on.call(wtrStatusEmitter, name, handler)
-  // automatically push the data to the event handler the first time its called
-  if (name === "data") {
+wtrStatusEmitter.on = function (event, handler) {
+  EventEmitter.prototype.on.call(wtrStatusEmitter, event, handler)
+  // automatically push the data to the event handler when it initially subscribes
+  if (event === "data") {
     handler(currentStatus)
   }
 }

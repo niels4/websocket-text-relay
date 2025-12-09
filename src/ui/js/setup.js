@@ -1,5 +1,5 @@
-import { WebsocketClient } from "./util/WebsocketClient.js"
-import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./dependencies.js" // initialize dependencies on the global __WTR__ object
+import { WebsocketClient } from "./setup/WebsocketClient.js"
+import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./setup/evalOnChange.js" // initialize dependencies on the global __WTR__ object
 import { setIsOnline, setSessions } from "./data/wtrStatus.js"
 
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
