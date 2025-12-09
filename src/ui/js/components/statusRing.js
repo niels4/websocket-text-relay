@@ -1,11 +1,35 @@
 const { drawSvgElement, constants, wtrStatusEmitter, onEvent } = __WTR__
 const { innerRingRadius } = constants
 
-const group = document.getElementById("status_ring_group")
-group.innerHTML = ""
+const parentGroup = document.getElementById("status_ring_group")
+parentGroup.innerHTML = ""
 
-drawSvgElement({ tag: "circle", attributes: { r: innerRingRadius }, parent: group })
+let currentClass = "offline"
+
+const wrapper = drawSvgElement({
+  tag: "g",
+  className: ["status_ring_wrapper", currentClass],
+  parent: parentGroup,
+})
+
+drawSvgElement({
+  tag: "circle",
+  className: currentClass,
+  attributes: { r: innerRingRadius },
+  parent: wrapper,
+})
 
 onEvent(wtrStatusEmitter, "data", (data) => {
+  let nextClass
+  if (data.isOnline) {
+    nextClass = "online"
+  } else {
+    nextClass = "offline"
+  }
+  if (nextClass !== currentClass) {
+    wrapper.classList.remove(currentClass)
+    wrapper.classList.add(nextClass)
+    currentClass = nextClass
+  }
   console.log("status", data)
 })

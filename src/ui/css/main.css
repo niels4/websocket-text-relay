@@ -14,7 +14,7 @@
   --main-background-color: var(--color-navy-nightfall);
   --header-text-color: var(--color-ivory-daybreak);
   --summary-value-text-color: hsl(from var(--header-text-color) h s l / 0.9);
-  --offline-color: oklch(from var(--color-golden-sunset) calc(l * 0.5) calc(c * 0.25) h);
+  --offline-color: oklch(from var(--color-tangerine-sunset) calc(l * 0.4) calc(c * 0.1) h);
   --online-color: oklch(from var(--color-golden-sunset) calc(l * 0.8) calc(c * 0.25) h);
   --active-color: var(--color-golden-sunset);
   --wedge-online-color: oklch(from var(--color-azure-afternoon) calc(l * 0.5) calc(c * 0.5) h);
@@ -59,15 +59,15 @@ body {
   font-weight: 100;
 }
 
-#status_ring_group {
+.status_ring_wrapper.offline {
   stroke: var(--offline-color);
 }
 
-#status_ring_group.online {
+.status_ring_wrapper.online {
   stroke: var(--online-color);
 }
 
-#status_ring_group.active {
+.status_ring_wrapper.active {
   stroke: var(--active-color);
 }
 
