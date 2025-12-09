@@ -67,11 +67,11 @@ body {
   display: inherit;
 }
 
-.online .wedge_node {
+.wedge_node.online {
   fill: var(--wedge-online-color);
 }
 
-.active .wedge_node {
+.wedge_node.active {
   fill: var(--wedge-active-color);
 }
 

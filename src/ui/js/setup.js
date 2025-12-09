@@ -18,6 +18,7 @@ const jsFiles = [
   "js/components/headers.js",
   "js/components/footerStatus.js",
   "js/components/statusRing.js",
+  "js/components/sessionWedges.js",
 ]
 
 const ws = new WebsocketClient({ port: WS_PORT, host: hostname, protocol: wsProtocol })
