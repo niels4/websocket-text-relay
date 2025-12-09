@@ -1,5 +1,6 @@
 import { WebsocketClient } from "./util/WebsocketClient.js"
 import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./dependencies.js" // initialize dependencies on the global __WTR__ object
+import { setIsOnline, setSessions } from "./data/wtrStatus.js"
 
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
 const WS_PORT = 38378
@@ -61,10 +62,16 @@ const subscribeWatchers = () => {
 }
 
 if (ws.socketOpen) {
+  setIsOnline(true)
   subscribeWatchers()
 }
 ws.emitter.on("socket-open", () => {
+  setIsOnline(true)
   subscribeWatchers()
+})
+
+ws.emitter.on("socket-close", () => {
+  setIsOnline(false)
 })
 
 let evalInProgress = false
@@ -89,6 +96,7 @@ const handleJsMessage = async (message) => {
   }
   return
 }
+
 ws.emitter.on("message", async (message) => {
   if (message.method === "watch-file" && message.endsWith === cssEndsWith) {
     handleCss(message.contents)
@@ -100,11 +108,10 @@ ws.emitter.on("message", async (message) => {
   }
 
   if (message.method === "watch-wtr-status") {
-    console.log("watch status message", message.data)
+    setSessions(message.data?.sessions ?? [])
     return
   }
   if (message.method === "watch-wtr-activity") {
-    console.log("watch activity message", message.data)
     return
   }
 })
