@@ -1,4 +1,5 @@
 import { WebsocketClient } from "./util/WebsocketClient.js"
+import "./dependencies.js" // initialize dependencies on the global __WTR__ object
 
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
 const WS_PORT = 38378
@@ -7,7 +8,7 @@ const wsProtocol = protocol === "http:" ? "ws" : "wss"
 const CSS_FILE = "css/main.css"
 const cssEndsWith = FILE_PREFIX + CSS_FILE
 
-const jsFiles = ["js/components/statusRing.js"]
+const jsFiles = ["js/util/drawing.js", "js/components/statusRing.js"]
 
 const ws = new WebsocketClient({ port: WS_PORT, host: hostname, protocol: wsProtocol })
 

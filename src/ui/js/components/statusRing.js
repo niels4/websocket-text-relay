@@ -1,8 +1,8 @@
+const { drawSvgElement } = __WTR__
+
+const group = document.getElementById("status_ring_group")
+group.innerHTML = ""
+
+drawSvgElement({ tag: "circle", attributes: { r: 0.5, stroke: "red" }, parent: group })
+
 console.log("status ring")
-
-const statusRingNode = document.getElementById("status_ring_group")
-statusRingNode.innerHTML = ""
-
-statusRingNode.innerHTML = `
-<circle cx="0" cy="0" r="0.5" stroke="red" />
-`
