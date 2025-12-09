@@ -50,11 +50,15 @@ const initFiles = async () => {
   await fetch(CSS_FILE)
     .then((r) => r.text())
     .then(handleCss)
+
   const jsResults = await fetchAllFiles(jsFiles)
-  requestAnimationFrame(() => {
-    // wait for one frame to make sure css is applied first
-    jsResults.forEach((contents, i) => {
-      handleJs(contents, createJsEndsWith(jsFiles[i]))
+  await new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      // wait for one frame to make sure css is applied first
+      jsResults.forEach((contents, i) => {
+        handleJs(contents, createJsEndsWith(jsFiles[i]))
+      })
+      resolve()
     })
   })
 }
