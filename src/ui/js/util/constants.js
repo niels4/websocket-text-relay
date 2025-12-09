@@ -1,4 +1,6 @@
-const { exportDeps } = window.__WTR__
+const { exportDeps, evalOnChange } = window.__WTR__
+
+evalOnChange(["js/components/statusRing.js"])
 
 const constants = {
   innerRingRadius: 0.33,

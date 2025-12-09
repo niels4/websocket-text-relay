@@ -1,5 +1,5 @@
 import { WebsocketClient } from "./util/WebsocketClient.js"
-import "./dependencies.js" // initialize dependencies on the global __WTR__ object
+import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./dependencies.js" // initialize dependencies on the global __WTR__ object
 
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
 const WS_PORT = 38378
@@ -27,14 +27,18 @@ const handleJs = (contents) => {
   }
 }
 
+const fetchAllFiles = async (fileNames) => {
+  const fetches = fileNames.map(async (fileName) => {
+    return fetch(fileName).then((r) => r.text())
+  })
+  return Promise.all(fetches)
+}
+
 const initFiles = async () => {
   await fetch(CSS_FILE)
     .then((r) => r.text())
     .then(handleCss)
-  const jsFetches = jsFiles.map(async (fileName) => {
-    return fetch(fileName).then((r) => r.text())
-  })
-  const jsResults = await Promise.all(jsFetches)
+  const jsResults = await fetchAllFiles(jsFiles)
   requestAnimationFrame(() => {
     // wait for one frame to make sure css is applied first
     jsResults.forEach((contents) => {
@@ -63,7 +67,7 @@ ws.emitter.on("socket-open", () => {
   subscribeWatchers()
 })
 
-ws.emitter.on("message", (message) => {
+ws.emitter.on("message", async (message) => {
   console.log("got emitter message", message)
   if (message.method === "watch-file" && message.endsWith === cssEndsWith) {
     handleCss(message.contents)
@@ -71,8 +75,12 @@ ws.emitter.on("message", (message) => {
   }
 
   if (message.method === "watch-file" && message.endsWith.endsWith(".js")) {
-    // cleanupEventHandlers()
+    clearEvalOnChangeFiles()
     handleJs(message.contents)
+    const jsResults = await fetchAllFiles(getEvalOnChangeFiles())
+    jsResults.forEach((contents) => {
+      handleJs(contents)
+    })
     return
   }
 
