@@ -11,36 +11,38 @@ const maxWedges = 5
 const wedgeSpacing = 0.01
 const wedgeWidth = 0.08
 
-const totalStartAngle = 0.25 + outerArcSize / 2
+const startAngleOffset = outerArcSize / 2
 const totalAngleDelta = 0.5 - outerArcSize - wedgeSpacing
 const wedgeAngleDelta = totalAngleDelta / maxWedges - wedgeSpacing
 const innerWedgeRadius = outerRingRadius - wedgeWidth / 2
 
-const editors = Array.from({ length: 5 })
+/**
+ * @param sessions {EditorStatus[] | ClientStatus[] }
+ * @param direction {1 | -1}
+ */
 
-const direction = 1
-let editorWedges = []
+const drawWedges = (sessions, direction = 1) => {
+  for (let i = 0; i < sessions.length; i++) {
+    if (i >= maxWedges) {
+      break
+    }
+    let startAngle = 0.25 + direction * (startAngleOffset + (i + 1) * wedgeSpacing + i * wedgeAngleDelta)
+    if (direction === -1) {
+      startAngle -= wedgeAngleDelta
+    }
 
-for (let i = 0; i < editors.length; i++) {
-  let startAngle = direction * (totalStartAngle + (i + 1) * wedgeSpacing + i * wedgeAngleDelta)
-  if (direction === -1) {
-    startAngle -= wedgeAngleDelta
+    drawWedge({
+      startAngle,
+      angleDelta: wedgeAngleDelta,
+      innerRadius: innerWedgeRadius,
+      radiusDelta: wedgeWidth,
+      className: ["wedge_node", "active"],
+      parentNode: editorsParentGroup,
+    })
   }
-
-  console.log("drawing wedge", startAngle, wedgeAngleDelta, innerWedgeRadius)
-
-  const wedge = drawWedge({
-    startAngle,
-    angleDelta: wedgeAngleDelta,
-    innerRadius: innerWedgeRadius,
-    radiusDelta: wedgeWidth,
-    className: ["wedge_node", "active"],
-    parentNode: editorsParentGroup,
-  })
-
-  editorWedges.push(wedge)
 }
 
 onEvent(wtrStatusEmitter, "data", (/** @type {WtrStatus} */ { editors, clients }) => {
-  console.log(`got wedge data. editors: ${editors.length}, clients: ${clients.length}`)
+  drawWedges(editors, 1)
+  drawWedges(clients, -1)
 })
