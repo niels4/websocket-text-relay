@@ -1,5 +1,5 @@
-const { drawSvgElement, constants, wtrStatusEmitter, onEvent } = __WTR__
-const { innerRingRadius } = constants
+const { drawSvgElement, drawWedge, constants, wtrStatusEmitter, onEvent } = __WTR__
+const { innerRingRadius, outerRingRadius, outerArcSize } = constants
 
 const parentGroup = document.getElementById("status_ring_group")
 parentGroup.innerHTML = ""
@@ -14,9 +14,24 @@ const wrapper = drawSvgElement({
 
 drawSvgElement({
   tag: "circle",
-  className: currentClass,
   attributes: { r: innerRingRadius },
   parent: wrapper,
+})
+
+drawWedge({
+  startAngle: 0.25 - outerArcSize / 2,
+  angleDelta: outerArcSize,
+  innerRadius: outerRingRadius,
+  radiusDelta: 0,
+  parentNode: wrapper,
+})
+
+drawWedge({
+  startAngle: 0.75 - outerArcSize / 2,
+  angleDelta: outerArcSize,
+  innerRadius: outerRingRadius,
+  radiusDelta: 0,
+  parentNode: wrapper,
 })
 
 onEvent(wtrStatusEmitter, "data", (data) => {
@@ -27,10 +42,10 @@ onEvent(wtrStatusEmitter, "data", (data) => {
   } else {
     nextClass = "offline"
   }
+
   if (nextClass !== currentClass) {
     wrapper.classList.remove(currentClass)
     wrapper.classList.add(nextClass)
     currentClass = nextClass
   }
-  console.log("status", data)
 })

@@ -1,4 +1,6 @@
-const { exportDeps } = window.__WTR__
+const { exportDeps, evalOnChange } = window.__WTR__
+
+evalOnChange(["js/components/statusRing.js"])
 
 const TWO_PI = 2 * Math.PI
 const MAX_ANGLE_DELTA = 0.99999
