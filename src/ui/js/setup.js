@@ -15,6 +15,7 @@ const createJsEndsWith = (jsFile) => FILE_PREFIX + jsFile
 const jsFiles = [
   "js/util/constants.js",
   "js/util/drawing.js",
+  "js/components/headers.js",
   "js/components/footerStatus.js",
   "js/components/statusRing.js",
 ]

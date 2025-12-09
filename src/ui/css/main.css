@@ -46,17 +46,14 @@ body {
   stroke: hsl(76, 90%, 80%);
 }
 
-#header_summary_group {
+#headers_group {
   fill: var(--header-text-color);
   font-weight: 300;
+  font-size: 0.1pt;
 }
 
 .right_header {
   text-anchor: end;
-}
-
-.header_number {
-  font-weight: 100;
 }
 
 .status_ring_wrapper.offline {
