@@ -12,7 +12,12 @@ const cssEndsWith = FILE_PREFIX + CSS_FILE
 
 const createJsEndsWith = (jsFile) => FILE_PREFIX + jsFile
 
-const jsFiles = ["js/util/constants.js", "js/util/drawing.js", "js/components/statusRing.js"]
+const jsFiles = [
+  "js/util/constants.js",
+  "js/util/drawing.js",
+  "js/components/footerStatus.js",
+  "js/components/statusRing.js",
+]
 
 const ws = new WebsocketClient({ port: WS_PORT, host: hostname, protocol: wsProtocol })
 
