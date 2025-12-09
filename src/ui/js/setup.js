@@ -1,6 +1,7 @@
 import { WebsocketClient } from "./setup/WebsocketClient.js"
 import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./setup/evalOnChange.js" // initialize dependencies on the global __WTR__ object
 import { setIsOnline, setSessions } from "./data/wtrStatus.js"
+import { eventSubscriber } from "./setup/eventSubscriber.js" // make sure the eventSubscriber function is available on the __WTR__ object
 
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
 const WS_PORT = 38378
@@ -8,6 +9,8 @@ const { hostname, protocol } = window.location
 const wsProtocol = protocol === "http:" ? "ws" : "wss"
 const CSS_FILE = "css/main.css"
 const cssEndsWith = FILE_PREFIX + CSS_FILE
+
+const createJsEndsWith = (jsFile) => FILE_PREFIX + jsFile
 
 const jsFiles = ["js/util/constants.js", "js/util/drawing.js", "js/components/statusRing.js"]
 
@@ -19,7 +22,9 @@ const handleCss = (contents) => {
   cssElement.innerText = contents
 }
 
-const handleJs = (contents) => {
+const handleJs = (contents, jsEndsWith) => {
+  // register and clean up event handlers on a per file basis
+  window.__WTR__.onEvent = eventSubscriber(jsEndsWith)
   try {
     eval(contents)
   } catch (e) {
@@ -42,8 +47,8 @@ const initFiles = async () => {
   const jsResults = await fetchAllFiles(jsFiles)
   requestAnimationFrame(() => {
     // wait for one frame to make sure css is applied first
-    jsResults.forEach((contents) => {
-      handleJs(contents)
+    jsResults.forEach((contents, i) => {
+      handleJs(contents, createJsEndsWith(jsFiles[i]))
     })
   })
 }
@@ -83,10 +88,11 @@ const handleJsMessage = async (message) => {
   }
   evalInProgress = true
   clearEvalOnChangeFiles()
-  handleJs(message.contents)
-  const jsResults = await fetchAllFiles(getEvalOnChangeFiles())
-  jsResults.forEach((contents) => {
-    handleJs(contents)
+  handleJs(message.contents, message.endsWith)
+  const postEvalFiles = getEvalOnChangeFiles()
+  const jsResults = await fetchAllFiles(postEvalFiles)
+  jsResults.forEach((contents, i) => {
+    handleJs(contents, createJsEndsWith(postEvalFiles, i))
   })
   evalInProgress = false
   if (bufferedMessage) {
