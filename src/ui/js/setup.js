@@ -2,6 +2,7 @@ import { WebsocketClient } from "./setup/WebsocketClient.js"
 import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./setup/evalOnChange.js" // initialize dependencies on the global __WTR__ object
 import { setIsOnline, setSessions } from "./data/wtrStatus.js"
 import { eventSubscriber } from "./setup/eventSubscriber.js" // make sure the eventSubscriber function is available on the __WTR__ object
+import { emitActivity } from "./data/wtrActivity.js"
 
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
 const WS_PORT = 38378
@@ -122,13 +123,16 @@ ws.emitter.on("message", async (message) => {
 
   if (message.method === "watch-file" && message.endsWith.endsWith(".js")) {
     await handleJsMessage(message)
+    return
   }
 
   if (message.method === "watch-wtr-status") {
     setSessions(message.data?.sessions ?? [])
     return
   }
+
   if (message.method === "watch-wtr-activity") {
+    emitActivity(message.data)
     return
   }
 })
