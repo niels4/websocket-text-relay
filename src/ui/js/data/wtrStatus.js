@@ -1,4 +1,4 @@
-import { exportDeps } from "../setup/dependencyManager.js" // make sure the global __WTR__ object is initilized with the exportDeps function
+import { exportDeps } from "../setup/dependencyManager.js"
 import { EventEmitter } from "../setup/EventEmitter.js"
 
 // how long to wait after disconnect before clearing client side data
