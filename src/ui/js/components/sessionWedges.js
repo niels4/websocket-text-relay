@@ -21,11 +21,12 @@ const innerWedgeRadius = outerRingRadius - wedgeWidth / 2
  * @param direction {1 | -1}
  */
 
-const drawWedges = (sessions, direction = 1) => {
+const drawWedges = (sessions, parentNode, direction = 1) => {
   for (let i = 0; i < sessions.length; i++) {
     if (i >= maxWedges) {
       break
     }
+
     let startAngle = 0.25 + direction * (startAngleOffset + (i + 1) * wedgeSpacing + i * wedgeAngleDelta)
     if (direction === -1) {
       startAngle -= wedgeAngleDelta
@@ -37,12 +38,15 @@ const drawWedges = (sessions, direction = 1) => {
       innerRadius: innerWedgeRadius,
       radiusDelta: wedgeWidth,
       className: ["wedge_node", "active"],
-      parentNode: editorsParentGroup,
+      parentNode,
     })
   }
 }
 
 onEvent(wtrStatusEmitter, "data", (/** @type {WtrStatus} */ { editors, clients }) => {
-  drawWedges(editors, 1)
-  drawWedges(clients, -1)
+  console.log("editors", editors)
+  editorsParentGroup.innerHTML = ""
+  clientsParentGroup.innerHTML = ""
+  drawWedges(editors, editorsParentGroup, 1)
+  drawWedges(clients, clientsParentGroup, -1)
 })
