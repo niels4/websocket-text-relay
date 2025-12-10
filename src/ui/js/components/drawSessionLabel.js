@@ -13,7 +13,7 @@ evalOnChange(["js/components/sessionWedges.js"])
 const labelLineDistance = 0.07
 const underlinePadding = 0.02
 const summaryCircleRadius = 0.014
-const summaryValueSpacing = 0.035
+const summaryValueSpacing = 0.1
 
 /**
  * @param {{session: EditorStatus | ClientStatus, direction: 1 | -1}}
@@ -57,7 +57,6 @@ const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, session, direct
     parent,
   })
 
-  /** @type {HTMLElement} */
   const summaryGroup = drawSvgElement({ tag: "g", parent })
 
   let currentSummaryX = textStartX
@@ -67,7 +66,7 @@ const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, session, direct
       ? { leftText: session.openCount, rightText: session.activeOpenCount }
       : { leftText: session.watchCount, rightText: session.activeWatchCount }
 
-  const leftTextNode = drawText({
+  drawText({
     x: currentSummaryX + summaryCircleRadius * 2,
     y: textStartY,
     text: leftText,
@@ -80,15 +79,14 @@ const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, session, direct
     tag: "circle",
     attributes: {
       cx: currentSummaryX,
-      cy: textStartY - summaryCircleRadius / 2 + 0.0038,
+      cy: textStartY - summaryCircleRadius / 2,
       r: summaryCircleRadius,
     },
     className: "summary_watched_circle",
     parent: summaryGroup,
   })
 
-  const watchTextBBox = leftTextNode.getBBox()
-  currentSummaryX = watchTextBBox.x + watchTextBBox.width + summaryValueSpacing + summaryCircleRadius
+  currentSummaryX += summaryValueSpacing
 
   drawText({
     x: currentSummaryX + summaryCircleRadius * 2,
@@ -103,31 +101,16 @@ const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, session, direct
     tag: "circle",
     attributes: {
       cx: currentSummaryX,
-      cy: textStartY - summaryCircleRadius / 2 + 0.0038,
+      cy: textStartY - summaryCircleRadius / 2,
       r: summaryCircleRadius,
     },
     className: "summary_active_circle",
     parent: summaryGroup,
   })
 
-  const debugBBox = watchTextBBox
-
-  drawSvgElement({
-    tag: "rect",
-    attributes: {
-      x: debugBBox.x,
-      y: debugBBox.y,
-      height: debugBBox.height,
-      width: debugBBox.width,
-      "stroke-width": 0.003,
-      // stroke: "red",
-    },
-    parent: summaryGroup,
-  })
-
   const summaryGroupBBox = summaryGroup.getBBox()
   const translateX = direction === 1 ? -summaryGroupBBox.width - 0.02 : 0.05
-  const translateY = summaryGroupBBox.height / 2 + 0.008
+  const translateY = summaryGroupBBox.height / 2 + 0.014
   summaryGroup.setAttribute("transform", `translate(${translateX}, ${translateY})`)
 }
 
