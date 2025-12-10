@@ -59,6 +59,7 @@ const drawWedges = (sessions, parent, direction = 1) => {
     drawSessionLabel({
       wedgeCenterAngle: startAngle + wedgeAngleDelta / 2,
       wedgeCenterRadius: outerRingRadius,
+      direction,
       session,
       parent: wedgeLabelGroup,
     })
