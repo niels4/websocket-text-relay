@@ -1,6 +1,6 @@
 const { exportDeps, evalOnChange } = window.__WTR__
 
-evalOnChange(["js/components/statusRing.js"])
+evalOnChange(["js/components/statusRing.js", "js/components/sessionWedges.js"])
 
 const TWO_PI = 2 * Math.PI
 const MAX_ANGLE_DELTA = 0.99999
@@ -74,4 +74,16 @@ Z
   return drawSvgElement({ tag: "path", attributes: { d }, className, parent })
 }
 
-exportDeps({ drawSvgElement, drawText, polarToCartesian, drawWedge })
+const drawPolarLine = ({ startAngle, startRadius, endAngle, endRadius, className, parent }) => {
+  const [x1, y1] = polarToCartesian(startAngle, startRadius)
+  const [x2, y2] = polarToCartesian(endAngle, endRadius)
+
+  return drawSvgElement({ tag: "line", attributes: { x1, y1, x2, y2 }, className, parent })
+}
+
+const drawPolarCircle = ({ angle, radius, r, className, parent }) => {
+  const [cx, cy] = polarToCartesian(angle, radius)
+  return drawSvgElement({ tag: "circle", attributes: { cx, cy, r }, className, parent })
+}
+
+exportDeps({ drawSvgElement, drawText, polarToCartesian, drawWedge, drawPolarLine, drawPolarCircle })

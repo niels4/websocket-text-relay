@@ -19,6 +19,7 @@ const jsFiles = [
   "js/components/headers.js",
   "js/components/footerStatus.js",
   "js/components/statusRing.js",
+  "js/components/drawSessionLabel.js",
   "js/components/sessionWedges.js",
 ]
 

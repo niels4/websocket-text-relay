@@ -1,4 +1,12 @@
-const { drawSvgElement, drawWedge, wtrStatusEmitter, wtrActivityEmitter, onEvent, constants } = __WTR__
+const {
+  drawSvgElement,
+  drawWedge,
+  drawSessionLabel,
+  wtrStatusEmitter,
+  wtrActivityEmitter,
+  onEvent,
+  constants,
+} = __WTR__
 const { outerRingRadius, outerArcSize } = constants
 
 const editorsParentGroup = document.getElementById("editor_wedges_group")
@@ -46,8 +54,14 @@ const drawWedges = (sessions, parent, direction = 1) => {
       className: ["wedge_node", "active"],
       parent: wedgeLabelGroup,
     })
-
     wedgeMap.set(session.id, wedge)
+
+    drawSessionLabel({
+      wedgeCenterAngle: startAngle + wedgeAngleDelta / 2,
+      wedgeCenterRadius: outerRingRadius,
+      session,
+      parent: wedgeLabelGroup,
+    })
   }
 }
 

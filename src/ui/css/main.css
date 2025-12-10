@@ -169,11 +169,11 @@ body {
   text-anchor: middle;
 }
 
-.test_circle {
+.wedge_label_dot {
   fill: #fff;
 }
 
-.test_line {
+.wedge_label_line {
   stroke: #fff;
   stroke-width: 0.005;
 }
