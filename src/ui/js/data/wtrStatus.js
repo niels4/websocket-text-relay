@@ -1,6 +1,9 @@
 import { exportDeps } from "../setup/dependencyManager.js" // make sure the global __WTR__ object is initilized with the exportDeps function
 import { EventEmitter } from "../setup/EventEmitter.js"
 
+// how long to wait after disconnect before clearing client side data
+const CLEAR_TIMEOUT_LENGTH_MS = 3000
+
 /** @type {WtrStatus} */
 const currentStatus = {
   isOnline: false,
@@ -18,6 +21,7 @@ wtrStatusEmitter.on = function (event, handler) {
 }
 wtrStatusEmitter.addEventListener = wtrStatusEmitter.on
 
+let clearDataTimeout
 export const setIsOnline = (isOnline) => {
   if (isOnline === currentStatus.isOnline) {
     return
@@ -25,7 +29,12 @@ export const setIsOnline = (isOnline) => {
   currentStatus.isOnline = isOnline
 
   if (!isOnline) {
-    currentStatus.sessions = currentStatus.sessions.filter((s) => !s.isServer)
+    currentStatus.editors = currentStatus.editors.filter((s) => !s.isServer)
+    clearDataTimeout = setTimeout(() => {
+      setSessions([])
+    }, CLEAR_TIMEOUT_LENGTH_MS)
+  } else {
+    clearTimeout(clearDataTimeout)
   }
 
   wtrStatusEmitter.emit("data", currentStatus)
