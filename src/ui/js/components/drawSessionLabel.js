@@ -12,15 +12,13 @@ evalOnChange(["js/components/sessionWedges.js"])
 
 const labelLineDistance = 0.07
 const underlinePadding = 0.02
-// const summaryCircleRadius = 0.014
-// const summaryLeftPadding = 0.05
-// const summaryValueSpacing = 0.065
-// const editorSummaryPadding = 0.025
+const summaryCircleRadius = 0.014
+const summaryValueSpacing = 0.035
 
 /**
  * @param {{session: EditorStatus | ClientStatus, direction: 1 | -1}}
  */
-const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, direction, session, parent }) => {
+const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, session, direction, parent }) => {
   drawPolarCircle({
     angle: wedgeCenterAngle,
     radius: wedgeCenterRadius,
@@ -58,6 +56,79 @@ const drawSessionLabel = ({ wedgeCenterAngle, wedgeCenterRadius, direction, sess
     className: "wedge_label_line",
     parent,
   })
+
+  /** @type {HTMLElement} */
+  const summaryGroup = drawSvgElement({ tag: "g", parent })
+
+  let currentSummaryX = textStartX
+
+  const { leftText, rightText } =
+    direction === 1
+      ? { leftText: session.openCount, rightText: session.activeOpenCount }
+      : { leftText: session.watchCount, rightText: session.activeWatchCount }
+
+  const leftTextNode = drawText({
+    x: currentSummaryX + summaryCircleRadius * 2,
+    y: textStartY,
+    text: leftText,
+    dominantBaseline: "middle",
+    className: "summary_text_value",
+    parent: summaryGroup,
+  })
+
+  drawSvgElement({
+    tag: "circle",
+    attributes: {
+      cx: currentSummaryX,
+      cy: textStartY - summaryCircleRadius / 2 + 0.0038,
+      r: summaryCircleRadius,
+    },
+    className: "summary_watched_circle",
+    parent: summaryGroup,
+  })
+
+  const watchTextBBox = leftTextNode.getBBox()
+  currentSummaryX = watchTextBBox.x + watchTextBBox.width + summaryValueSpacing + summaryCircleRadius
+
+  drawText({
+    x: currentSummaryX + summaryCircleRadius * 2,
+    y: textStartY,
+    text: rightText,
+    dominantBaseline: "middle",
+    className: "summary_text_value",
+    parent: summaryGroup,
+  })
+
+  drawSvgElement({
+    tag: "circle",
+    attributes: {
+      cx: currentSummaryX,
+      cy: textStartY - summaryCircleRadius / 2 + 0.0038,
+      r: summaryCircleRadius,
+    },
+    className: "summary_active_circle",
+    parent: summaryGroup,
+  })
+
+  const debugBBox = watchTextBBox
+
+  drawSvgElement({
+    tag: "rect",
+    attributes: {
+      x: debugBBox.x,
+      y: debugBBox.y,
+      height: debugBBox.height,
+      width: debugBBox.width,
+      "stroke-width": 0.003,
+      // stroke: "red",
+    },
+    parent: summaryGroup,
+  })
+
+  const summaryGroupBBox = summaryGroup.getBBox()
+  const translateX = direction === 1 ? -summaryGroupBBox.width - 0.02 : 0.05
+  const translateY = summaryGroupBBox.height / 2 + 0.008
+  summaryGroup.setAttribute("transform", `translate(${translateX}, ${translateY})`)
 }
 
 exportDeps({ drawSessionLabel })
