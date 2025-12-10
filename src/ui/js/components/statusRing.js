@@ -23,7 +23,7 @@ drawWedge({
   angleDelta: outerArcSize,
   innerRadius: outerRingRadius,
   radiusDelta: 0,
-  parentNode: wrapper,
+  parent: wrapper,
 })
 
 drawWedge({
@@ -31,7 +31,7 @@ drawWedge({
   angleDelta: outerArcSize,
   innerRadius: outerRingRadius,
   radiusDelta: 0,
-  parentNode: wrapper,
+  parent: wrapper,
 })
 
 onEvent(wtrStatusEmitter, "data", (/** @type {WtrStatus} */ data) => {

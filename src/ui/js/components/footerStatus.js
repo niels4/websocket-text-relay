@@ -11,17 +11,17 @@ drawText({
   y: 0.85,
   text: "WS Server PID",
   className: "server_status_label",
-  parentNode: parentGroup,
+  parent: parentGroup,
 })
 
-const pidElement = drawText({ x: 0, y: 0.748, text: "-1", parentNode: parentGroup })
+const pidElement = drawText({ x: 0, y: 0.748, text: "-1", parent: parentGroup })
 
 const offlineElement = drawText({
   x: 0,
   y: 0.748,
   text: "OFFLINE",
   className: offlineTextClass,
-  parentNode: parentGroup,
+  parent: parentGroup,
 })
 
 onEvent(wtrStatusEmitter, "data", (/** @type {WtrStatus} */ data) => {

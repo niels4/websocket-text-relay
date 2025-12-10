@@ -29,7 +29,7 @@ const drawSvgElement = ({ tag, attributes = {}, className, parent }) => {
   return element
 }
 
-const drawText = ({ x, y, text, dominantBaseline, textAnchor, className, parentNode: parent }) => {
+const drawText = ({ x, y, text, dominantBaseline, textAnchor, className, parent }) => {
   const textElement = drawSvgElement({
     tag: "text",
     attributes: { x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor },
@@ -47,7 +47,7 @@ const polarToCartesian = (angle, radius) => {
   return [x, y]
 }
 
-const drawWedge = ({ startAngle, angleDelta, innerRadius, radiusDelta, className, parentNode: parent }) => {
+const drawWedge = ({ startAngle, angleDelta, innerRadius, radiusDelta, className, parent }) => {
   if (angleDelta < 0) {
     angleDelta = 0
   }
