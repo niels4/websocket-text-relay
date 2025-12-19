@@ -44,6 +44,13 @@ const drawWedges = (sessions, parent, direction = 1) => {
       startAngle -= wedgeAngleDelta
     }
 
+    const isActive = session.activeWatchCount || session.activeOpenCount
+
+    const classNames = ["wedge_node"]
+    if (isActive) {
+      classNames.push("active")
+    }
+
     const wedgeLabelGroup = drawSvgElement({ tag: "g", parent })
 
     const wedge = drawWedge({
@@ -51,7 +58,7 @@ const drawWedges = (sessions, parent, direction = 1) => {
       angleDelta: wedgeAngleDelta,
       innerRadius: innerWedgeRadius,
       radiusDelta: wedgeWidth,
-      className: ["wedge_node", "active"],
+      className: classNames,
       parent: wedgeLabelGroup,
     })
     wedgeMap.set(session.id, wedge)
