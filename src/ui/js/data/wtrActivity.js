@@ -1,7 +1,8 @@
 import { exportDeps } from "../setup/dependencyManager.js"
 import { EventEmitter } from "../setup/EventEmitter.js"
+import { constants } from "../util/constants.js"
 
-const dataWindowSize = 16
+const { dataWindowSize } = constants
 const dataWindowInterval = 1000
 
 let currentMaxValue = 0
@@ -81,4 +82,4 @@ wtrActivityEmitter.on("data", () => {
   currentActivityCount++
 })
 
-exportDeps({ wtrActivityEmitter, wtrActivityDataWindowEmitter, dataWindowSize })
+exportDeps({ wtrActivityEmitter, wtrActivityDataWindowEmitter })

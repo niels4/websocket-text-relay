@@ -1,5 +1,5 @@
-const { drawSvgElement, constants, wtrActivityDataWindowEmitter, onEvent, dataWindowSize } = __WTR__
-const { innerRingRadius } = constants
+const { drawSvgElement, constants, wtrActivityDataWindowEmitter, onEvent } = __WTR__
+const { innerRingRadius, dataWindowSize } = constants
 
 const parentGroup = document.getElementById("activity_time_series_group")
 parentGroup.innerHTML = ""
