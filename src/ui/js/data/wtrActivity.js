@@ -1,8 +1,8 @@
 import { exportDeps } from "../setup/dependencyManager.js"
 import { EventEmitter } from "../setup/EventEmitter.js"
-import { constants } from "../util/constants.js"
+import "../util/constants.js"
 
-const { dataWindowSize } = constants
+const { dataWindowSize } = __WTR__.constants
 const dataWindowInterval = 1000
 
 let currentMaxValue = 0

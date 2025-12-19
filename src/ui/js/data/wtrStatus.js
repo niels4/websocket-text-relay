@@ -1,10 +1,10 @@
 import { exportDeps } from "../setup/dependencyManager.js"
 import { EventEmitter } from "../setup/EventEmitter.js"
-import { constants } from "../util/constants.js"
+import "../util/constants.js"
 
 // how long to wait after disconnect before clearing client side data
 const CLEAR_TIMEOUT_LENGTH_MS = 3000
-const { maxSessionWedges } = constants
+const { maxSessionWedges } = __WTR__.constants
 
 /** @type {WtrStatus} */
 const currentStatus = {
