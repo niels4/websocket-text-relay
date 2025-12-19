@@ -7,7 +7,7 @@ const {
   onEvent,
   constants,
 } = __WTR__
-const { outerRingRadius, outerArcSize } = constants
+const { outerRingRadius, outerArcSize, maxSessionWedges } = constants
 
 const editorsParentGroup = document.getElementById("editor_wedges_group")
 editorsParentGroup.innerHTML = ""
@@ -15,13 +15,12 @@ editorsParentGroup.innerHTML = ""
 const clientsParentGroup = document.getElementById("client_wedges_group")
 clientsParentGroup.innerHTML = ""
 
-const maxWedges = 5
 const wedgeSpacing = 0.01
 const wedgeWidth = 0.08
 
 const startAngleOffset = outerArcSize / 2
 const totalAngleDelta = 0.5 - outerArcSize - wedgeSpacing
-const wedgeAngleDelta = totalAngleDelta / maxWedges - wedgeSpacing
+const wedgeAngleDelta = totalAngleDelta / maxSessionWedges - wedgeSpacing
 const innerWedgeRadius = outerRingRadius - wedgeWidth / 2
 
 /** @type {Map<SessionId, HTMLElement>} */
@@ -34,7 +33,7 @@ let wedgeMap = new Map()
  */
 const drawWedges = (sessions, parent, direction = 1) => {
   for (let i = 0; i < sessions.length; i++) {
-    if (i >= maxWedges) {
+    if (i >= maxSessionWedges) {
       break
     }
     const session = sessions[i]

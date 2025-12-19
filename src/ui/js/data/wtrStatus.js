@@ -1,8 +1,10 @@
 import { exportDeps } from "../setup/dependencyManager.js"
 import { EventEmitter } from "../setup/EventEmitter.js"
+import { constants } from "../util/constants.js"
 
 // how long to wait after disconnect before clearing client side data
 const CLEAR_TIMEOUT_LENGTH_MS = 3000
+const { maxSessionWedges } = constants
 
 /** @type {WtrStatus} */
 const currentStatus = {
@@ -52,6 +54,46 @@ export const setSessions = (sessions) => {
 }
 
 /**
+ * @param {EditorStatus[] | ClientStatus[]} sessions
+ * @returns {EditorStatus[] | ClientStatus[]}
+ */
+const summarizeSessions = (sessions) => {
+  if (sessions.length <= maxSessionWedges) {
+    return sessions
+  }
+  const numOthers = sessions.length - maxSessionWedges + 1
+  const truncatedList = []
+  /** @type {EditorStatus & ClientStatus} */
+  const otherSessions = {
+    name: `${numOthers} others...`,
+    openCount: 0,
+    activeOpenCount: 0,
+    watchCount: 0,
+    activeWatchCount: 0,
+    isServer: false,
+    lsPid: null,
+    editorPid: null,
+  }
+  for (let i = 0; i < maxSessionWedges - 1; i++) {
+    truncatedList.push(sessions[i])
+  }
+  truncatedList.push(otherSessions)
+
+  for (let i = maxSessionWedges - 1; i < sessions.length; i++) {
+    const session = sessions[i]
+    otherSessions.openCount += session.openCount
+    otherSessions.activeOpenCount += session.activeOpenCount
+    otherSessions.watchCount += session.watchCount
+    otherSessions.activeWatchCount += session.activeWatchCount
+    otherSessions.lsPid = otherSessions.lsPid || session.lsPid
+    otherSessions.editorPid = otherSessions.editorPid || session.editorPid
+    otherSessions.isServer = otherSessions.isServer || session.isServer
+  }
+
+  return truncatedList
+}
+
+/**
  * @param {SessionStatus[]} sessions
  * @returns {editors: EditorStatus[], clients: ClientStatus[]}
  */
@@ -86,7 +128,7 @@ const sessionDataTranform = (sessions) => {
     })
   }
 
-  return { editors, clients }
+  return { editors: summarizeSessions(editors), clients: summarizeSessions(clients) }
 }
 
 exportDeps({ wtrStatusEmitter })

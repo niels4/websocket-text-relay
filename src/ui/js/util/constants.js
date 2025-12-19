@@ -7,6 +7,7 @@ export const constants = {
   outerRingRadius: 0.6,
   outerArcSize: 0.175,
   dataWindowSize: 16,
+  maxSessionWedges: 5,
 }
 
 exportDeps({ constants })
