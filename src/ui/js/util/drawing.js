@@ -29,10 +29,10 @@ const drawSvgElement = ({ tag, attributes = {}, className, parent }) => {
   return element
 }
 
-const drawText = ({ x, y, text, dominantBaseline, textAnchor, className, parent }) => {
+const drawText = ({ x, y, text, attributes = {}, dominantBaseline, textAnchor, className, parent }) => {
   const textElement = drawSvgElement({
     tag: "text",
-    attributes: { x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor },
+    attributes: { ...attributes, x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor },
     className,
     parent,
   })

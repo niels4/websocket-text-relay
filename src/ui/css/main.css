@@ -58,16 +58,7 @@ body {
   stroke: var(--active-color);
 }
 
-.single_wedge_group {
-  display: none;
-}
-
-.single_wedge_group.online,
-.single_wedge_group.active {
-  display: inherit;
-}
-
-.wedge_node.online {
+.wedge_node {
   fill: var(--wedge-online-color);
 }
 
@@ -98,10 +89,6 @@ body {
   fill: var(--active-color);
 }
 
-.timeseries_bg {
-  fill: none;
-}
-
 .time_series_path {
   stroke: var(--timeseries-line-color);
   stroke-width: 3;
@@ -109,45 +96,20 @@ body {
   shape-rendering: crispEdges;
 }
 
-.timeseries_big_label {
-  font-size: 0.04pt;
-  font-weight: 400;
-  text-anchor: end;
-}
-
-.timeseries_small_label {
+.time_series_small_label {
   font-size: 0.03pt;
   font-weight: 400;
-  text-anchor: end;
+  fill: var(--timeseries-label-color);
+  text-anchor: middle;
+  dominant-baseline: central;
 }
 
-.timeseries_value {
+.time_series_value {
   fill: var(--timeseries-value-color);
   font-size: 0.05pt;
   font-weight: 300;
   text-anchor: middle;
-}
-
-.tooltip_text {
-  fill: #fff;
-  font-size: 0.025pt;
-  font-weight: 200;
-  text-anchor: middle;
-}
-
-.tooltip_outline {
-  stroke: #fff;
-  stroke-width: 0.002;
-  fill: #000;
-}
-
-.tooltip_display_group {
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.tooltip_wrapper_group:hover .tooltip_display_group {
-  opacity: 1;
+  dominant-baseline: central;
 }
 
 .server_status_label {

@@ -6,7 +6,7 @@ const dataWindowInterval = 1000
 
 let currentMaxValue = 0
 const dataWindow = initDataWindow()
-let currentDataWindowMessage = { ...processDataWindow(dataWindow), prevMaxValue: 0 }
+let currentDataWindowMessage = { ...processDataWindow(dataWindow), prevMaxValue: 0, currentValue: 0 }
 
 const wtrActivityEmitter = new EventEmitter()
 
@@ -35,10 +35,15 @@ const onTick = async () => {
   const newTime = prevEndTime + dataWindowInterval
   dataWindow.shift()
   dataWindow.push({ time: newTime, value: currentActivityCount })
-  currentActivityCount = 0
   const { path, maxValue } = processDataWindow(dataWindow)
-  currentDataWindowMessage = { path, maxValue, prevMaxValue: currentMaxValue }
+  currentDataWindowMessage = {
+    path,
+    maxValue,
+    prevMaxValue: currentMaxValue,
+    currentValue: currentActivityCount,
+  }
   currentMaxValue = maxValue
+  currentActivityCount = 0
   wtrActivityDataWindowEmitter.emit("data", currentDataWindowMessage)
 }
 

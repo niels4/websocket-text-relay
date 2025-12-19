@@ -22,6 +22,7 @@ const jsFiles = [
   "js/components/drawSessionLabel.js",
   "js/components/sessionWedges.js",
   "js/components/activityTimeSeries.js",
+  "js/components/activityLabels.js",
 ]
 
 const ws = new WebsocketClient({ port: WS_PORT, host: hostname, protocol: wsProtocol })
