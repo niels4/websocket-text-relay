@@ -36,13 +36,13 @@
   },
   "homepage": "https://github.com/niels4/websocket-text-relay#readme",
   "devDependencies": {
-    "@eslint/js": "9.39.1",
-    "@vitest/coverage-v8": "4.0.15",
-    "@vitest/ui": "4.0.15",
-    "eslint": "9.39.1",
+    "@eslint/js": "9.39.2",
+    "@vitest/coverage-v8": "4.0.16",
+    "@vitest/ui": "4.0.16",
+    "eslint": "9.39.2",
     "globals": "16.5.0",
     "prettier": "3.7.4",
-    "vitest": "4.0.15"
+    "vitest": "4.0.16"
   },
   "dependencies": {
     "ws": "8.18.3"
