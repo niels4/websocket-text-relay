@@ -32,11 +32,17 @@ const drawSvgElement = ({ tag, attributes = {}, className, parent }) => {
 const drawText = ({ x, y, text, attributes = {}, dominantBaseline, textAnchor, className, parent }) => {
   const textElement = drawSvgElement({
     tag: "text",
-    attributes: { ...attributes, x, y, "dominant-baseline": dominantBaseline, "text-anchor": textAnchor },
+    attributes: { ...attributes, x, y },
     className,
     parent,
   })
   textElement.textContent = text
+  if (textAnchor) {
+    textElement.style["text-anchor"] = textAnchor
+  }
+  if (dominantBaseline) {
+    textElement.style["dominant-baseline"] = dominantBaseline
+  }
   return textElement
 }
 

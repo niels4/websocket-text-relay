@@ -96,7 +96,7 @@ body {
   shape-rendering: crispEdges;
 }
 
-.time_series_small_label {
+.small_label {
   font-size: 0.03pt;
   font-weight: 400;
   fill: var(--timeseries-label-color);

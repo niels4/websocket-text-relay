@@ -10,7 +10,7 @@ const labelPadding = 0.14
 drawText({
   text: "Max",
   y: -innerRingRadius + labelPadding,
-  className: "time_series_small_label",
+  className: "small_label",
   parent: parentGroup,
 })
 
@@ -24,7 +24,7 @@ const maxValueText = drawText({
 drawText({
   text: "Updates / second",
   y: innerRingRadius - labelPadding,
-  className: "time_series_small_label",
+  className: "small_label",
   parent: parentGroup,
 })
 
