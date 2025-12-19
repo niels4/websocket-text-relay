@@ -1,4 +1,4 @@
-const { drawSvgElement, constants, wtrActivityDataWindowEmitter, onEvent } = __WTR__
+const { drawSvgElement, constants, wtrActivityDataWindowEmitter, onEvent, dataWindowSize } = __WTR__
 const { innerRingRadius } = constants
 
 const parentGroup = document.getElementById("activity_time_series_group")
@@ -6,29 +6,11 @@ parentGroup.innerHTML = ""
 
 const animationProps = { duration: 1000, easing: "linear", iterations: 1, fill: "forwards" }
 
-// const animationKeyFrames = [
-//   {
-//     transform: `translateX(${minX}px) translateY(${maxY}px) scaleX(${intervalWidth}) scaleY(${-state.prevValueScale})`,
-//   },
-//   {
-//     transform: `translateX(${minX - intervalWidth}px) translateY(${maxY}px) scaleX(${intervalWidth}) scaleY(${-valueScale})`,
-//   },
-// ]
-
-const animationKeyFrames = [
-  {
-    transform: `translateX(0)`,
-  },
-  {
-    transform: `translateX(${innerRingRadius}px)`,
-  },
-]
-
 const minX = -innerRingRadius
 const width = innerRingRadius * 2
-const height = innerRingRadius * 0.8
-const minY = -height / 2
+const height = 0.25
 const maxY = height / 2
+const intervalWidth = width / (dataWindowSize - 2)
 
 const clipId = "time-series-clip"
 
@@ -50,21 +32,27 @@ const clippedGroup = drawSvgElement({
   parent: parentGroup,
 })
 
-const testDot = drawSvgElement({
-  tag: "circle",
-  attributes: { r: 0.04, fill: "var(--color-tangerine-sunset)" },
+const valuePath = drawSvgElement({
+  tag: "path",
+  attributes: { d: "" },
+  className: "time_series_path",
   parent: clippedGroup,
 })
 
-// const clipRectAttributes = { x: minX, width, y: minY, height }
-// drawSvgElement({
-//   tag: "rect",
-//   attributes: { ...clipRectAttributes, stroke: "white" },
-//   parent: parentGroup,
-// })
-
-testDot.animate(animationKeyFrames, animationProps)
+const getValueScale = (maxValue) => (maxValue === 0 ? 0.00001 : height / maxValue)
 
 onEvent(wtrActivityDataWindowEmitter, "data", (data) => {
-  console.log("data window", data.at(-2))
+  valuePath.setAttribute("d", data.path)
+  const prevValueScale = getValueScale(data.prevMaxValue)
+  const valueScale = getValueScale(data.maxValue)
+
+  const animationKeyFrames = [
+    {
+      transform: `translateX(${minX}px) translateY(${maxY}px) scaleX(${intervalWidth}) scaleY(${-prevValueScale})`,
+    },
+    {
+      transform: `translateX(${minX - intervalWidth}px) translateY(${maxY}px) scaleX(${intervalWidth}) scaleY(${-valueScale})`,
+    },
+  ]
+  valuePath.animate(animationKeyFrames, animationProps)
 })
