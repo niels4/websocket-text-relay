@@ -1,3 +1,13 @@
+## 1.1.7 - 2025/12/19
+
+### UI Update
+Allow default websocket port to be overridden with url search param: `?port=38378`
+
+## 1.1.6 - 2025/12/19
+
+### UI Update
+Rewrite the UI to be simpler and fix browser compatibility issues.
+
 ## 1.1.5 - 2025/09/05
 
 Minor UI spacing fix

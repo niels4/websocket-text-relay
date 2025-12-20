@@ -4,8 +4,10 @@ import { setIsOnline, setSessions } from "./data/wtrStatus.js"
 import { eventSubscriber } from "./setup/eventSubscriber.js" // make sure the eventSubscriber function is available on the __WTR__ object
 import { emitActivity } from "./data/wtrActivity.js"
 
+const searchParams = new URLSearchParams(window.location.search)
+
 const FILE_PREFIX = "websocket-text-relay/src/ui/"
-const WS_PORT = 38378
+const wsPort = searchParams.get("port") ?? 38378
 const { hostname, protocol } = window.location
 const wsProtocol = protocol === "http:" ? "ws" : "wss"
 const CSS_FILE = "css/main.css"
@@ -25,7 +27,7 @@ const jsFiles = [
   "js/components/activityLabels.js",
 ]
 
-const ws = new WebsocketClient({ port: WS_PORT, host: hostname, protocol: wsProtocol })
+const ws = new WebsocketClient({ port: wsPort, host: hostname, protocol: wsProtocol })
 
 const cssElement = document.getElementById("main_style")
 
