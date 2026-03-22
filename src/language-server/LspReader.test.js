@@ -1,7 +1,8 @@
+import assert from "node:assert/strict"
 import { PassThrough } from "node:stream"
-import { describe, it, expect, beforeAll } from "vitest"
-import { LspReader } from "./LspReader.js"
+import { before as beforeAll, describe, it } from "node:test"
 import { parseErrorCode, parseHeaderErrorMessage, parseJsonErrorMessage } from "./constants.js"
+import { LspReader } from "./LspReader.js"
 
 describe("LspReader", () => {
   describe("simple case", () => {
@@ -26,7 +27,7 @@ describe("LspReader", () => {
       })
 
       it("should parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
 
@@ -51,7 +52,7 @@ describe("LspReader", () => {
       })
 
       it("should parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
   })
@@ -77,11 +78,11 @@ describe("LspReader", () => {
       })
 
       it("should emit an 'parse-error' event with the parse header error message", () => {
-        expect(actualError).to.deep.equal(expectedError)
+        assert.deepStrictEqual(actualError, expectedError)
       })
 
       it("should not emit any objects", () => {
-        expect(actualMessageObj).toBeNull()
+        assert.strictEqual(actualMessageObj, null)
       })
     })
 
@@ -97,8 +98,8 @@ describe("LspReader", () => {
         method: "test/test-method",
         params: { b: "2" },
       }
-      let actualMessageObjs = []
-      let actualErrors = []
+      const actualMessageObjs = []
+      const actualErrors = []
 
       beforeAll(() => {
         const inputStream = new PassThrough()
@@ -116,13 +117,13 @@ describe("LspReader", () => {
       })
 
       it("should emit only 1 'parse-error' event with the parse header error message", () => {
-        expect(actualErrors.length).toEqual(1)
-        expect(actualErrors[0]).to.deep.equal(expectedError)
+        assert.strictEqual(actualErrors.length, 1)
+        assert.deepStrictEqual(actualErrors[0], expectedError)
       })
 
       it("should not emit one object from the message with the valid header", () => {
-        expect(actualMessageObjs.length).toEqual(1)
-        expect(actualMessageObjs[0]).to.deep.equal(expectedObject)
+        assert.strictEqual(actualMessageObjs.length, 1)
+        assert.deepStrictEqual(actualMessageObjs[0], expectedObject)
       })
     })
 
@@ -138,8 +139,8 @@ describe("LspReader", () => {
         method: "test/test-method",
         params: { b: "2" },
       }
-      let actualMessageObjs = []
-      let actualErrors = []
+      const actualMessageObjs = []
+      const actualErrors = []
 
       beforeAll(() => {
         const inputStream = new PassThrough()
@@ -157,13 +158,13 @@ describe("LspReader", () => {
       })
 
       it("should emit only 1 'parse-error' event with the parse header error message", () => {
-        expect(actualErrors.length).toEqual(1)
-        expect(actualErrors[0]).to.deep.equal(expectedError)
+        assert.strictEqual(actualErrors.length, 1)
+        assert.deepStrictEqual(actualErrors[0], expectedError)
       })
 
       it("should not emit one object from the message with the valid header", () => {
-        expect(actualMessageObjs.length).toEqual(1)
-        expect(actualMessageObjs[0]).to.deep.equal(expectedObject)
+        assert.strictEqual(actualMessageObjs.length, 1)
+        assert.deepStrictEqual(actualMessageObjs[0], expectedObject)
       })
     })
 
@@ -187,11 +188,11 @@ describe("LspReader", () => {
       })
 
       it("should emit an 'parse-error' event with the parse JSON error message", () => {
-        expect(actualError).to.deep.equal(expectedError)
+        assert.deepStrictEqual(actualError, expectedError)
       })
 
       it("should not emit any objects", () => {
-        expect(actualMessageObj).toBeNull()
+        assert.strictEqual(actualMessageObj, null)
       })
     })
   })
@@ -228,11 +229,11 @@ describe("LspReader", () => {
       })
 
       it("should not emit an error", () => {
-        expect(actualError).toBeNull()
+        assert.strictEqual(actualError, null)
       })
 
       it("should buffer the data until it can parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
 
@@ -274,11 +275,11 @@ describe("LspReader", () => {
       })
 
       it("should not emit an error", () => {
-        expect(actualError).toBeNull()
+        assert.strictEqual(actualError, null)
       })
 
       it("should buffer the data until it can parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
 
@@ -313,11 +314,11 @@ describe("LspReader", () => {
       })
 
       it("should not emit an error", () => {
-        expect(actualError).toBeNull()
+        assert.strictEqual(actualError, null)
       })
 
       it("should buffer the data until it can parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
 
@@ -362,11 +363,11 @@ describe("LspReader", () => {
       })
 
       it("should not emit an error", () => {
-        expect(actualError).toBeNull()
+        assert.strictEqual(actualError, null)
       })
 
       it("should buffer the data until it can parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
   })
@@ -396,19 +397,19 @@ describe("LspReader", () => {
       })
 
       it("should construct the lspReader with the passed in initialBufferSize", () => {
-        expect(actualInitialBufferSize).toEqual(10)
+        assert.strictEqual(actualInitialBufferSize, 10)
       })
 
       it("should need to trigger a resize", () => {
-        expect(inputData.length).toBeGreaterThan(actualInitialBufferSize)
+        assert.strictEqual(inputData.length > actualInitialBufferSize, true)
       })
 
       it("should increase the buffer to a size larger than the message chunk", () => {
-        expect(lspReader.buffer.length).toBeGreaterThan(inputData.length)
+        assert.strictEqual(lspReader.buffer.length > inputData.length, true)
       })
 
       it("should parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
 
@@ -446,24 +447,24 @@ describe("LspReader", () => {
       })
 
       it("should not emit an error", () => {
-        expect(actualError).toBeNull()
+        assert.strictEqual(actualError, null)
       })
 
       it("should construct the lspReader with the passed in initialBufferSize", () => {
-        expect(actualInitialBufferSize).toEqual(70)
+        assert.strictEqual(actualInitialBufferSize, 70)
       })
 
       it("should need to trigger a resize after the first buffered message", () => {
-        expect(inputData[0].length).toBeLessThan(actualInitialBufferSize)
-        expect(inputData[1].length).toBeGreaterThan(actualInitialBufferSize)
+        assert.strictEqual(inputData[0].length < actualInitialBufferSize, true)
+        assert.strictEqual(inputData[1].length > actualInitialBufferSize, true)
       })
 
       it("should increase the buffer to a size larger than the combined message chunks", () => {
-        expect(lspReader.buffer.length).toBeGreaterThan(inputData[0].length + inputData[1].length)
+        assert.strictEqual(lspReader.buffer.length > inputData[0].length + inputData[1].length, true)
       })
 
       it("should buffer the data until it can parse the incoming data and emit the json rpc message object", () => {
-        expect(actualMessageObj).to.deep.equal(expectedMessageObj)
+        assert.deepStrictEqual(actualMessageObj, expectedMessageObj)
       })
     })
   })
@@ -480,7 +481,7 @@ describe("LspReader", () => {
       { jsonrpc: "2.0", id: "1", method: "test/test-method", params: { b: "2" } },
       { jsonrpc: "2.0", id: "2", method: "test/test-method", params: { c: "3" } },
     ]
-    let actualMessageObjs = []
+    const actualMessageObjs = []
     let actualError = null
 
     beforeAll(() => {
@@ -500,11 +501,11 @@ describe("LspReader", () => {
     })
 
     it("should not emit an error", () => {
-      expect(actualError).toBeNull()
+      assert.strictEqual(actualError, null)
     })
 
     it("should emit each message in the order it was received", () => {
-      expect(actualMessageObjs).to.deep.equal(expectedMessageObjs)
+      assert.deepStrictEqual(actualMessageObjs, expectedMessageObjs)
     })
   })
 
@@ -521,7 +522,7 @@ describe("LspReader", () => {
       { jsonrpc: "2.0", id: "1", method: "test/test-method", params: { b: "2" } },
       { jsonrpc: "2.0", id: "2", method: "test/test-method", params: { c: "3" } },
     ]
-    let actualMessageObjs = []
+    const actualMessageObjs = []
     let actualError = null
 
     beforeAll(() => {
@@ -539,11 +540,11 @@ describe("LspReader", () => {
     })
 
     it("should not emit an error", () => {
-      expect(actualError).toBeNull()
+      assert.strictEqual(actualError, null)
     })
 
     it("should emit each message in the order it was received", () => {
-      expect(actualMessageObjs).to.deep.equal(expectedMessageObjs)
+      assert.deepStrictEqual(actualMessageObjs, expectedMessageObjs)
     })
   })
 
@@ -559,7 +560,7 @@ describe("LspReader", () => {
         { jsonrpc: "2.0", id: "1", method: "test/test-method", params: { b: "2" } },
         { jsonrpc: "2.0", id: "2", method: "test/test-method", params: { c: "3" } },
       ]
-      let actualMessageObjs = []
+      const actualMessageObjs = []
       let actualError = null
 
       beforeAll(() => {
@@ -579,11 +580,11 @@ describe("LspReader", () => {
       })
 
       it("should not emit an error", () => {
-        expect(actualError).toBeNull()
+        assert.strictEqual(actualError, null)
       })
 
       it("should emit each message in the order it was received", () => {
-        expect(actualMessageObjs).to.deep.equal(expectedMessageObjs)
+        assert.deepStrictEqual(actualMessageObjs, expectedMessageObjs)
       })
     })
   })

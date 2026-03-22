@@ -1,8 +1,9 @@
+import assert from "node:assert/strict"
 import { Writable } from "node:stream"
-import { describe, it, expect, beforeAll } from "vitest"
+import { before as beforeAll, describe, it } from "node:test"
 import {
-  TESTONLY_resetRequestId,
   createHeader,
+  TESTONLY_resetRequestId,
   writeNotification,
   writeRequest,
   writeResponse,
@@ -17,7 +18,7 @@ describe("LspWriter", () => {
 
       it("Should create header with correct length", () => {
         const actual = createHeader(JSON.stringify(messageObj))
-        expect(actual).toEqual(expectedHeader)
+        assert.deepStrictEqual(actual, expectedHeader)
       })
     })
 
@@ -27,7 +28,7 @@ describe("LspWriter", () => {
 
       it("Should create header with correct length", () => {
         const actual = createHeader(JSON.stringify(messageObj))
-        expect(actual).toEqual(expectedHeader)
+        assert.deepStrictEqual(actual, expectedHeader)
       })
     })
 
@@ -37,7 +38,7 @@ describe("LspWriter", () => {
 
       it("Should create header with correct byte length, not string length", () => {
         const actual = createHeader(JSON.stringify(messageObj))
-        expect(actual).toEqual(expectedHeader)
+        assert.deepStrictEqual(actual, expectedHeader)
       })
     })
   })
@@ -59,7 +60,7 @@ describe("LspWriter", () => {
       })
 
       it("should stringify the json and add a Content-Length header, then write the head and json to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepEqual(actualOutput, expectedOutput)
       })
     })
   })
@@ -82,7 +83,7 @@ describe("LspWriter", () => {
       })
 
       it("should create a response object with a result property (and no error) and write it to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepEqual(actualOutput, expectedOutput)
       })
     })
 
@@ -103,7 +104,7 @@ describe("LspWriter", () => {
       })
 
       it("should create a response object with an error property (and no result) and write it to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepEqual(actualOutput, expectedOutput)
       })
     })
   })
@@ -126,7 +127,7 @@ describe("LspWriter", () => {
       })
 
       it("should write a notification message without an ID property on the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepEqual(actualOutput, expectedOutput)
       })
     })
   })
@@ -150,7 +151,7 @@ describe("LspWriter", () => {
       })
 
       it("should write a request message with an ID property on the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepEqual(actualOutput, expectedOutput)
       })
     })
 
@@ -179,7 +180,7 @@ describe("LspWriter", () => {
       })
 
       it("should write multiple request messages with increasing IDs", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepEqual(actualOutput, expectedOutput)
       })
     })
   })

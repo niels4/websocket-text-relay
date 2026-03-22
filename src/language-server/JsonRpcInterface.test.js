@@ -1,7 +1,6 @@
-import { describe, it, expect, beforeAll } from "vitest"
+import assert from "node:assert/strict"
 import { PassThrough, Writable } from "node:stream"
-import { JsonRpcInterface } from "./JsonRpcInterface.js"
-import { TESTONLY_resetRequestId } from "./LspWriter.js"
+import { before as beforeAll, describe, it } from "node:test"
 import {
   invalidRequestErrorCode,
   invalidRequestErrorMessage,
@@ -12,6 +11,8 @@ import {
   unexpectedRequestErrorCode,
   unexpectedRequestErrorMessage,
 } from "./constants.js"
+import { JsonRpcInterface } from "./JsonRpcInterface.js"
+import { TESTONLY_resetRequestId } from "./LspWriter.js"
 
 describe("JsonRpcInterface", () => {
   describe("onNotification", () => {
@@ -34,14 +35,14 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should call the handler with the correct params", () => {
-        expect(actualParams).to.deep.equal(expectedParams)
+        assert.deepStrictEqual(actualParams, expectedParams)
       })
     })
 
     describe("when attempting to register duplicate onNotification handlers ", () => {
       let inputStream, outputStream, jsonRpc
-      let f1 = () => {}
-      let f2 = () => {}
+      const f1 = () => {}
+      const f2 = () => {}
 
       beforeAll(() => {
         inputStream = new PassThrough()
@@ -52,9 +53,7 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should throw an error if we try to register the same method twice (without first removing the handler)", () => {
-        expect(() => jsonRpc.onNotification("test/test-method", f2)).to.toThrowError(
-          /duplicate method handlers/i,
-        )
+        assert.throws(() => jsonRpc.onNotification("test/test-method", f2), /duplicate method handlers/i)
       })
     })
 
@@ -63,8 +62,8 @@ describe("JsonRpcInterface", () => {
       const incomingMessage = `Content-Length: 64\r\n\r\n{"jsonrpc":"2.0","method":"test/test-method","params":{"a":"1"}}`
       let f1Fired = false
       let f2Fired = false
-      let f1 = () => (f1Fired = true)
-      let f2 = () => (f2Fired = true)
+      const f1 = () => (f1Fired = true)
+      const f2 = () => (f2Fired = true)
 
       beforeAll(() => {
         inputStream = new PassThrough()
@@ -79,8 +78,8 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should call function f2 instead of f1", () => {
-        expect(f1Fired).to.equal(false)
-        expect(f2Fired).to.equal(true)
+        assert.strictEqual(f1Fired, false)
+        assert.strictEqual(f2Fired, true)
       })
     })
 
@@ -111,7 +110,7 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should fire the notification-error event with the correct error data", () => {
-        expect(actualError).to.deep.equal(expectedError)
+        assert.deepStrictEqual(actualError, expectedError)
       })
     })
 
@@ -138,7 +137,7 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should fire the notification-error event with the correct error data", () => {
-        expect(actualError).to.deep.equal(expectedError)
+        assert.deepStrictEqual(actualError, expectedError)
       })
     })
   })
@@ -170,11 +169,11 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should call the handler with the correct params", () => {
-        expect(actualParams).to.deep.equal(expectedParams)
+        assert.deepStrictEqual(actualParams, expectedParams)
       })
 
       it("should write the response to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepStrictEqual(actualOutput, expectedOutput)
       })
     })
 
@@ -207,23 +206,23 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should call the handler with the correct params", () => {
-        expect(actualParams).to.deep.equal(expectedParams)
+        assert.deepStrictEqual(actualParams, expectedParams)
       })
 
       it("should not write the response until the promise resolves", () => {
-        expect(actualOutput).toEqual("")
+        assert.deepStrictEqual(actualOutput, "")
       })
 
       it("should write the response after the async function resolves with the result", async () => {
         await new Promise((resolve) => setTimeout(resolve, 1))
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepStrictEqual(actualOutput, expectedOutput)
       })
     })
 
     describe("when attempting to register duplicate onRequest handlers ", () => {
       let inputStream, outputStream, jsonRpc
-      let f1 = () => {}
-      let f2 = () => {}
+      const f1 = () => {}
+      const f2 = () => {}
 
       beforeAll(() => {
         inputStream = new PassThrough()
@@ -234,7 +233,7 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should throw an error if we try to register the same method twice (without first removing the handler)", () => {
-        expect(() => jsonRpc.onRequest("test/test-method", f2)).to.toThrowError(/duplicate method handlers/i)
+        assert.throws(() => jsonRpc.onRequest("test/test-method", f2), /duplicate method handlers/i)
       })
     })
 
@@ -242,8 +241,8 @@ describe("JsonRpcInterface", () => {
       const incomingMessage = `Content-Length: 73\r\n\r\n{"jsonrpc":"2.0","id":"0","method":"test/test-method","params":{"a":"1"}}`
       let f1Fired = false
       let f2Fired = false
-      let f1 = () => (f1Fired = true)
-      let f2 = () => (f2Fired = true)
+      const f1 = () => (f1Fired = true)
+      const f2 = () => (f2Fired = true)
 
       beforeAll(() => {
         const inputStream = new PassThrough()
@@ -258,8 +257,8 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should call function f2 instead of f1", () => {
-        expect(f1Fired).to.equal(false)
-        expect(f2Fired).to.equal(true)
+        assert.strictEqual(f1Fired, false)
+        assert.strictEqual(f2Fired, true)
       })
     })
 
@@ -299,11 +298,11 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should fire the notification-error event with the correct error data", () => {
-        expect(actualError).to.deep.equal(expectedError)
+        assert.deepStrictEqual(actualError, expectedError)
       })
 
       it("should write the error to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepStrictEqual(actualOutput, expectedOutput)
       })
     })
 
@@ -339,11 +338,11 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should fire the notification-error event with the correct error data", () => {
-        expect(actualError).to.deep.equal(expectedError)
+        assert.deepStrictEqual(actualError, expectedError)
       })
 
       it("should write the error to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepStrictEqual(actualOutput, expectedOutput)
       })
     })
   })
@@ -367,7 +366,7 @@ describe("JsonRpcInterface", () => {
     })
 
     it("should write a notification message without an ID property on the output stream", () => {
-      expect(actualOutput).toEqual(expectedOutput)
+      assert.deepStrictEqual(actualOutput, expectedOutput)
     })
   })
 
@@ -399,18 +398,18 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should write the request message to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepStrictEqual(actualOutput, expectedOutput)
       })
 
       it("should return an unresolved promise", () => {
-        expect(requestPromise).toBeInstanceOf(Promise)
-        expect(actualResult).toBeNull()
+        assert.strictEqual(requestPromise instanceof Promise, true)
+        assert.strictEqual(actualResult, null)
       })
 
       it("should resolve the promise when the client responds with a result", async () => {
         inputStream.write(clientResponse)
         const result = await requestPromise
-        expect(result).to.deep.equal(expectedResult)
+        assert.deepStrictEqual(result, expectedResult)
       })
     })
 
@@ -441,18 +440,18 @@ describe("JsonRpcInterface", () => {
       })
 
       it("should write the request message to the output stream", () => {
-        expect(actualOutput).toEqual(expectedOutput)
+        assert.deepStrictEqual(actualOutput, expectedOutput)
       })
 
       it("should return an unresolved promise", () => {
-        expect(requestPromise).toBeInstanceOf(Promise)
-        expect(actualResult).toBeNull()
+        assert.strictEqual(requestPromise instanceof Promise, true)
+        assert.strictEqual(actualResult, null)
       })
 
       it("should reject the promise when the client responds with an error", async () => {
         inputStream.write(clientResponse)
         await requestPromise.catch((error) => {
-          expect(error).to.deep.equal(expectedError)
+          assert.deepStrictEqual(error, expectedError)
         })
       })
     })
@@ -476,7 +475,7 @@ describe("JsonRpcInterface", () => {
     })
 
     it("should write the error to the output stream", () => {
-      expect(actualOutput).toEqual(expectedOutput)
+      assert.deepStrictEqual(actualOutput, expectedOutput)
     })
   })
 
@@ -516,11 +515,11 @@ describe("JsonRpcInterface", () => {
     })
 
     it("should emit an rpc-error event on the events emitter", () => {
-      expect(actualError).to.deep.equal(expectedError)
+      assert.deepStrictEqual(actualError, expectedError)
     })
 
     it("should notify the client that it sent an invalid rpc message", () => {
-      expect(actualOutput).toEqual(expectedOutput)
+      assert.deepStrictEqual(actualOutput, expectedOutput)
     })
   })
 })
