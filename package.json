@@ -6,11 +6,12 @@
     "websocket-text-relay": "./start.js"
   },
   "scripts": {
-    "format": "prettier src --write",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "test": "npm run lint && vitest run --coverage",
-    "test:ui": "vitest --ui"
+    "format": "biome check --write",
+    "lint": "biome check",
+    "test:run": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage",
+    "test:watch": "node --test --watch",
+    "test": "npm run lint && npm run test:run"
   },
   "type": "module",
   "main": "./src/index.js",
@@ -35,16 +36,10 @@
     "url": "https://github.com/niels4/websocket-text-relay/issues"
   },
   "homepage": "https://github.com/niels4/websocket-text-relay#readme",
-  "devDependencies": {
-    "@eslint/js": "9.39.2",
-    "@vitest/coverage-v8": "4.0.16",
-    "@vitest/ui": "4.0.16",
-    "eslint": "9.39.2",
-    "globals": "16.5.0",
-    "prettier": "3.7.4",
-    "vitest": "4.0.16"
-  },
   "dependencies": {
+    "@biomejs/biome": "2.4.8",
+    "@types/node": "25.5.0",
+    "typescript": "5.9.3",
     "ws": "8.18.3"
   }
 }
