@@ -66,7 +66,7 @@ function processDataWindow(dataWindow) {
     }
     return `${i},${value}`
   })
-  const path = "M " + coords.join(" L ")
+  const path = `M ${coords.join(" L ")}`
   return { path, maxValue }
 }
 

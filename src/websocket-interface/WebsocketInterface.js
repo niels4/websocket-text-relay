@@ -1,8 +1,8 @@
+import { EventEmitter } from "node:events"
 import { WebsocketClient } from "./WebsocketClient.js"
 import { WtrSession } from "./WtrSession.js"
 import { apiMethods } from "./websocketApi.js"
 import { createWebsocketServer } from "./websocketServer.js"
-import { EventEmitter } from "node:events"
 
 const watchActiveFilesMessage = { method: "watch-editor-active-files" }
 
@@ -81,7 +81,7 @@ export class WebsocketInterface {
   _sendMessageToServer(message) {
     if (this.serverSession) {
       this.serverSession._handleApiMessage(message)
-    } else if (this.wsClient && this.wsClient.socketOpen) {
+    } else if (this.wsClient?.socketOpen) {
       this.wsClient.sendMessage(message)
     }
   }

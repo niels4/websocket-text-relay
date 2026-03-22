@@ -2,6 +2,7 @@ const allCleanupFunctions = new Map()
 
 export const eventSubscriber = (key) => {
   const previousCleanupFunctions = allCleanupFunctions.get(key)
+  // biome-ignore lint/suspicious/useIterableCallbackReturn: Keep the function a 1 liner
   previousCleanupFunctions?.forEach((f) => f())
 
   const cleanupFunctions = []

@@ -1,6 +1,4 @@
 import { EventEmitter } from "node:events"
-import { LspReader } from "./LspReader.js"
-import { writeNotification, writeRequest, writeResponse } from "./LspWriter.js"
 import {
   invalidRequestErrorCode,
   invalidRequestErrorMessage,
@@ -11,6 +9,8 @@ import {
   unexpectedRequestErrorCode,
   unexpectedRequestErrorMessage,
 } from "./constants.js"
+import { LspReader } from "./LspReader.js"
+import { writeNotification, writeRequest, writeResponse } from "./LspWriter.js"
 
 export class JsonRpcInterface {
   constructor({ inputStream, outputStream }) {
@@ -34,7 +34,7 @@ export class JsonRpcInterface {
   onNotification(method, handler) {
     if (this.notificationHandlers.has(method)) {
       throw new Error(
-        "Can only register one notification handler at a time. Duplicate method handlers for " + method,
+        `Can only register one notification handler at a time. Duplicate method handlers for ${method}`,
       )
     }
     this.notificationHandlers.set(method, handler)
@@ -47,7 +47,7 @@ export class JsonRpcInterface {
   onRequest(method, handler) {
     if (this.requestHandlers.has(method)) {
       throw new Error(
-        "Can only register one request handler at a time. Duplicate method handlers for " + method,
+        `Can only register one request handler at a time. Duplicate method handlers for ${method}`,
       )
     }
     this.requestHandlers.set(method, handler)

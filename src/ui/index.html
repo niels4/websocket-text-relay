@@ -1,41 +1,44 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>WTR Status</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="css/fonts.css" />
-    <style id="main_style"></style>
-    <script type="module" src="js/setup.js" defer></script>
+  <title>WTR Status</title>
 
-    <style>
-      html {
-        height: 100dvh;
-        overscroll-behavior: none;
-      }
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <style id="main_style"></style>
+  <script type="module" src="js/setup.js" defer></script>
 
-      #svg_root {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100dvh;
-        width: 100dvw;
-      }
-    </style>
-  </head>
+  <style>
+    html {
+      height: 100dvh;
+      overscroll-behavior: none;
+    }
 
-  <body class="base_colors color_theme">
-    <svg id="svg_root" viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg">
-      <g id="headers_group"></g>
-      <g id="editor_wedges_group" class="wedge_group"></g>
-      <g id="client_wedges_group" class="wedge_group"></g>
-      <g id="activity_time_series_group"></g>
-      <g id="activity_labels_group"></g>
-      <g id="status_ring_group"></g>
-      <g id="footer_status_group"></g>
-    </svg>
-  </body>
+    #svg_root {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100dvh;
+      width: 100dvw;
+    }
+  </style>
+</head>
+
+<body class="base_colors color_theme">
+  <svg id="svg_root" viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg">
+    <title>Main Svg Canvas</title>
+    <g id="headers_group"></g>
+    <g id="editor_wedges_group" class="wedge_group"></g>
+    <g id="client_wedges_group" class="wedge_group"></g>
+    <g id="activity_time_series_group"></g>
+    <g id="activity_labels_group"></g>
+    <g id="status_ring_group"></g>
+    <g id="footer_status_group"></g>
+  </svg>
+</body>
+
 </html>

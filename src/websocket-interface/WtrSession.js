@@ -1,11 +1,11 @@
 import { EventEmitter } from "node:events"
-import { getNextId } from "./util.js"
 import {
-  startSessionStatus,
   endSessionStatus,
-  statusEvents,
   removeWatchedFileLinks,
+  startSessionStatus,
+  statusEvents,
 } from "./sessionManager.js"
+import { getNextId } from "./util.js"
 
 export class WtrSession {
   constructor({ apiMethods, wsConnection, wsInterfaceEmitter }) {
@@ -118,7 +118,7 @@ export class WtrSession {
   }
 
   _handleApiMessage(message) {
-    const method = message && message.method
+    const method = message?.method
     const methodHandler = this.apiMethods.get(method)
     if (!methodHandler) {
       this.emitter.emit("log", { level: "error", text: `unknown ws api method: ${method}` })

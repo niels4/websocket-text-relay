@@ -14,7 +14,7 @@ const currentStatus = {
 }
 
 const wtrStatusEmitter = new EventEmitter()
-wtrStatusEmitter.on = function (event, handler) {
+wtrStatusEmitter.on = (event, handler) => {
   EventEmitter.prototype.on.call(wtrStatusEmitter, event, handler)
   // automatically push the data to the event handler when it initially subscribes
   if (event === "data") {

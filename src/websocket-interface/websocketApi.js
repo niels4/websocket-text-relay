@@ -1,10 +1,10 @@
 import {
-  triggerStatusUpdate,
-  statusEvents,
-  addWatchedFileLinks,
-  removeWatchedFileLinks,
-  removeOpenedFileLinks,
   addOpenedFileLinks,
+  addWatchedFileLinks,
+  removeOpenedFileLinks,
+  removeWatchedFileLinks,
+  statusEvents,
+  triggerStatusUpdate,
 } from "./sessionManager.js"
 
 export const apiMethods = new Map([

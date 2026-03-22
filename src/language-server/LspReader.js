@@ -23,7 +23,7 @@ const getJsonLength = (data, bufferStartIndex, jsonStartIndex) => {
   if (!match) {
     return null
   }
-  return Number.parseInt(match[1])
+  return Number.parseInt(match[1], 10)
 }
 
 export class LspReader extends Transform {

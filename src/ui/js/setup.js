@@ -1,8 +1,8 @@
-import { WebsocketClient } from "./setup/WebsocketClient.js"
-import { getEvalOnChangeFiles, clearEvalOnChangeFiles } from "./setup/evalOnChange.js" // initialize dependencies on the global __WTR__ object
-import { setIsOnline, setSessions } from "./data/wtrStatus.js"
-import { eventSubscriber } from "./setup/eventSubscriber.js" // make sure the eventSubscriber function is available on the __WTR__ object
 import { emitActivity } from "./data/wtrActivity.js"
+import { setIsOnline, setSessions } from "./data/wtrStatus.js"
+import { clearEvalOnChangeFiles, getEvalOnChangeFiles } from "./setup/evalOnChange.js" // initialize dependencies on the global __WTR__ object
+import { eventSubscriber } from "./setup/eventSubscriber.js" // make sure the eventSubscriber function is available on the __WTR__ object
+import { WebsocketClient } from "./setup/WebsocketClient.js"
 
 const searchParams = new URLSearchParams(window.location.search)
 
@@ -39,6 +39,7 @@ const handleJs = (contents, jsEndsWith) => {
   // register and clean up event handlers on a per file basis
   window.__WTR__.onEvent = eventSubscriber(jsEndsWith)
   try {
+    // biome-ignore lint/security/noGlobalEval: Live updates requires eval
     eval(contents)
   } catch (e) {
     window._lastEvalError = e

@@ -1,9 +1,10 @@
-import { createServer } from "node:http"
-import path from "node:path"
 import { createReadStream } from "node:fs"
 import fs from "node:fs/promises"
+import { createServer } from "node:http"
+import path from "node:path"
 import * as url from "node:url"
 import { isValidOrigin } from "./util.js"
+
 const parentDir = url.fileURLToPath(new URL("..", import.meta.url))
 
 const uiDirName = "ui"
@@ -19,7 +20,7 @@ const allowedFileTypes = new Map([
 ])
 
 const getFilePath = (url) => {
-  url = url === "/" ? "./index.html" : "." + url
+  url = url === "/" ? "./index.html" : `.${url}`
   return path.join(uiDirPath, url)
 }
 

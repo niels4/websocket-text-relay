@@ -7,8 +7,8 @@ const resolvePort = (portParam) => {
   if (portParam != null) {
     return portParam
   }
-  if (process.env["websocket_text_relay_port"] != null) {
-    return process.env["websocket_text_relay_port"]
+  if (process.env.websocket_text_relay_port != null) {
+    return process.env.websocket_text_relay_port
   }
   return DEFAULT_WS_PORT
 }
