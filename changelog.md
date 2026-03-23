@@ -1,3 +1,9 @@
+## 1.1.9 - 2026/03/22
+
+### Dependencies Update
+
+- Separate out dev dependencies.
+
 ## 1.1.8 - 2026/03/22
 
 ### Dependencies Update
