@@ -37,9 +37,11 @@
   },
   "homepage": "https://github.com/niels4/websocket-text-relay#readme",
   "dependencies": {
+    "ws": "8.18.3"
+  },
+  "devDependencies": {
     "@biomejs/biome": "2.4.8",
     "@types/node": "25.5.0",
-    "typescript": "5.9.3",
-    "ws": "8.18.3"
+    "typescript": "5.9.3"
   }
 }
