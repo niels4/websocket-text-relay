@@ -1,3 +1,11 @@
+## 1.1.8 - 2026/03/22
+
+### Dependencies Update
+
+- Switch to Biome for formatting and linting.
+- Switch to native nodejs test runner
+- Remove all old dependencies
+
 ## 1.1.7 - 2025/12/19
 
 ### UI Update
