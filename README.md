@@ -15,18 +15,18 @@ WTR currently has plugins for Neovim and VSCode.
 ### 2. Verify the webserver is running with the status UI
 
 The websocket server hosts its own status UI on the same port as the websocket server. You can view
-the status UI and verify everything is running by first starting up your text editor and then opening your browser to [http://localhost:38378](http://localhost:38378)
+the status UI and verify everything is running by first starting up your text editor, enabling the server, and then opening your browser to [http://localhost:38378](http://localhost:38378)
 
 ### 3. Connect to the websocket server from the front end application
+
+If you want to use this as a learning tool to play around with UI concepts using simple projects involving 1 html, css, and javascript file,
+then check out [live-demo-vanillajs](https://github.com/niels4/live-demo-vanillajs). This is a great setup for following along with any short and focused web development tutorials.
 
 To use this on a professional level project that gives you the option to use modules, typescript, and react, I recommend using vite along with
 the plugin [vite-plugin-websocket-text-relay](https://github.com/niels4/vite-plugin-websocket-text-relay). This plugin gives you all the power of vite when developing while also hooking
 the live text updates into Vite's hot module reload system. See [live-demo-vite](https://github.com/niels4/live-demo-vite) for a complete project setup with Typescript, React, Vite, ViTest, and a simple router.
 
-If you want to use this as a learning tool to play around with UI concepts using simple projects involving 1 html, css, and javascript file,
-then check out [live-demo-vanillajs](https://github.com/niels4/live-demo-vanillajs). This is a great setup for following along with any short and focused web development tutorials.
-
-And finally, the status UI for this project was also created using live updates from websocket-text-relay.
+The status UI for this project was also created using live updates from websocket-text-relay.
 In addition to giving you live feedback on the status and activity of the application, it is also meant to serve as a
 reference UI project that doesn't use any external dependencies.
 

@@ -1,3 +1,9 @@
+## 1.1.10 - 2026/04/28
+
+### Bug Fixes:
+
+- Fixed a dependency resolution issue that would sometimes cause the UI to not load.
+
 ## 1.1.9 - 2026/03/22
 
 ### Dependencies Update
