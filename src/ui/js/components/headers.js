@@ -3,6 +3,8 @@ const { drawText, drawSvgElement } = __WTR__
 const parentGroup = document.getElementById("headers_group")
 parentGroup.innerHTML = ""
 
+const leftHeaderText = "editors"
+const rightHeaderText = "clients"
 const legendCircleRadius = 0.014
 
 const baseLineY = -0.73
@@ -10,7 +12,7 @@ const xOffset = 0.86
 const legendY = baseLineY + 0.05
 
 // left header
-drawText({ x: -xOffset, y: baseLineY, text: "editors", className: "header", parent: parentGroup })
+drawText({ x: -xOffset, y: baseLineY, text: leftHeaderText, className: "header", parent: parentGroup })
 
 // left legend
 let circleStart = -xOffset + 0.093
@@ -55,7 +57,7 @@ drawText({
 drawText({
   x: xOffset,
   y: baseLineY,
-  text: "clients",
+  text: rightHeaderText,
   className: ["header", "right_header"],
   parent: parentGroup,
 })
