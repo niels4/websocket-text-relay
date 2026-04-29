@@ -95,7 +95,7 @@ function unwatchEditorActiveFiles(wtrSession) {
 }
 
 function relayText(wtrSession, data) {
-  if (!data || !data.file) {
+  if (!data?.file) {
     return
   }
   const { file, contents } = data
