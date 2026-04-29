@@ -1,3 +1,4 @@
+import "../setup/evalOnChange.js"
 const { exportDeps, evalOnChange } = window.__WTR__
 
 evalOnChange(["js/components/statusRing.js", "js/components/sessionWedges.js"])
